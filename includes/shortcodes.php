@@ -84,9 +84,11 @@
 		
 		$form_class = (WE_LS_SUPPORT_AVADA_THEME) ? "avada-contact-form" :"ws_ls_display_form";
 		
+
+	
 		$output = "
 
-		<form action=\"" .  get_site_url() . "/" . get_query_var('pagename') . "\" method=\"post\" class=\"" . $form_class .  "\" id=\"weight_form\">
+		<form action=\"" .  get_permalink() . "\" method=\"post\" class=\"" . $form_class .  "\" id=\"weight_form\">
 			<input type=\"hidden\" value=\"\" name=\"weight_user_id\">
 			<div id=\"comment-input\">
 				<input type=\"date\" name=\"weight_date\" id=\"weight_date\" value=\"" . date("Y-m-d") . "\" placeholder=\"" . date("Y-m-d") . "\" size=\"22\" tabindex=\"1\">";
@@ -401,10 +403,85 @@
 	
 
 function ws_ls_register_shortcodes()
-{
+{ 	/*
+		[weightloss_weight_difference] - total weight lost by the logged in member
+		[weightloss_weight_start] - start weight of the logged in member
+		[weightloss_weight_most_recent] - end weight of the logged in member
+	*/
+
  	add_shortcode( 'weightlosstracker', 'ws_ls_shortcode' );
+ 	add_shortcode( 'weightloss_weight_difference', 'ws_ls_weight_difference' );
+ 	add_shortcode( 'weightloss_weight_start', 'ws_ls_weight_start' );
+ 	add_shortcode( 'weightloss_weight_most_recent', 'ws_ls_weight_recent' );
 }
 
+function ws_ls_weight_start()
+{
+	$weight = ws_ls_get_weight_extreme(get_current_user_id());
+
+	return we_ls_format_weight_into_correct_string_format($weight);
+}
+function ws_ls_weight_recent()
+{
+	$weight =  ws_ls_get_weight_extreme(get_current_user_id(), true);
+
+	return we_ls_format_weight_into_correct_string_format($weight);
+}
+function ws_ls_weight_difference()
+{
+	$start_weight = ws_ls_get_start_weight_in_kg();
+	$recent_weight = ws_ls_get_weight_extreme(get_current_user_id(), true);
+	$difference = $recent_weight - $start_weight;
+
+	$display_string = ($difference > 0) ? "+" : ""; 
+
+	$display_string .= we_ls_format_weight_into_correct_string_format($difference);
+
+	return $display_string;
+}
+
+function ws_ls_get_start_weight_in_kg()
+{
+	return ws_ls_get_weight_extreme(get_current_user_id());
+}
+function ws_ls_get_recent_weight_in_kg()
+{
+	return ws_ls_get_weight_extreme(get_current_user_id(), true);
+}
+
+function ws_ls_get_weight_extreme($user_id, $recent = false)
+{
+	global $wpdb;
+
+	$direction = "asc";
+
+	if ($recent)
+		$direction = "desc";
+
+	$table_name = $wpdb->prefix . WE_LS_TABLENAME;
+
+	$sql =  $wpdb->prepare("SELECT weight_weight FROM $table_name where weight_user_id = %d order by weight_date " . $direction . " limit 0, %d", $user_id, 1);
+
+	$rows = $wpdb->get_row($sql);
+
+	if ($rows->iCount == 0)
+		return $rows->weight_weight;
+	else
+		return false;
+
+}
+function we_ls_format_weight_into_correct_string_format($weight)
+{
+	
+	if(WE_LS_IMPERIAL_WEIGHTS)
+	{
+		$weight_data = ws_ls_to_stone_pounds($weight);
+
+		return $weight_data["Stones"] . "st " . $weight_data["Pounds"] . "lbs";
+	}
+	else
+		return $weight . "kg";
+}
 function ws_ls_title($text)
 {
 	if(WE_LS_SUPPORT_AVADA_THEME)

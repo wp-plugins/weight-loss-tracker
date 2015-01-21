@@ -3,7 +3,7 @@ Contributors: aliakro
 Tags: weight, graph, track
 Requires at least: 4.0.0
 Tested up to: 4.0
-Stable tag: 4.0
+Stable tag: 1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: http://www.yeken.uk
@@ -17,6 +17,12 @@ A very simple plugin to allow a logged in user to record their weight (Kg or St)
 Place the tag [weightlosstracker] on a given page and the user is presented with a form to enter a date, weight (Kg or St) and notes for that entry. When the person saves their entry the data table and graph is refreshed.
 
 If data is entered for an existing date, then the previous entry is simply updated. The graph is shown when there are two or more entries.
+
+Also supports the following tags:
+
+	[weightloss_weight_difference] - total weight lost by the logged in member
+	[weightloss_weight_start] - start weight of the logged in member
+	[weightloss_weight_most_recent] - end weight of the logged in member
 
 == Installation ==
 
@@ -42,6 +48,14 @@ Yes. In define_globals.php set WE_LS_SUPPORT_AVADA_THEME to "true".
 1. A basic view of the plugin displayed to the user (in Avada theme support mode)
 
 == Changelog ==
+
+= 1.4 =
+
+* Added the following tags:
+
+	[weightloss_weight_difference] - total weight lost by the logged in member
+	[weightloss_weight_start] - start weight of the logged in member
+	[weightloss_weight_most_recent] - end weight of the logged in member
 
 = 1.2 / 1.3 =
 * Various changes made upon feedback from WordPress submission
