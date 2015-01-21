@@ -5,8 +5,9 @@ defined('ABSPATH') or die("Jog on!");
 /**
  * Plugin Name: Weight Loss Tracker
  * Description: A simple plugin for user's to set their intitial weight and add subsequent weights. These are then displayed on a graph.
- * Version: 1.1
- * Author: Ali Akro
+ * Version: 1.4
+ * Author: YeKen
+ * Author URI: http://www.YeKen.uk
  * License: GPL2
  */
 /*  Copyright 2014 Ali Akro
