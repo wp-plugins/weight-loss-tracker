@@ -3,7 +3,7 @@ Contributors: aliakro
 Tags: weight, graph, track
 Requires at least: 4.0.0
 Tested up to: 4.0
-Stable tag: 1.4
+Stable tag: 1.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: http://www.yeken.uk
@@ -48,6 +48,26 @@ Yes. In define_globals.php set WE_LS_SUPPORT_AVADA_THEME to "true".
 1. A basic view of the plugin displayed to the user (in Avada theme support mode)
 
 == Changelog ==
+
+= 1.5 =
+
+* Replaced chart.js with chartNew.js (https://github.com/FVANCOP/ChartNew.js/) to allow graph axis labels
+* Axis labels added to graph
+* Bug fix. Imperial measurements are now displayed on the graph in pounds (as opposed to stones / lbs) due to this bug:
+
+	The problem is plotting imperial values on a graph. Say you have the following imperial data (stones / pounds) data:
+
+	'15 7','15 3','15 0','14 12','14 10','14 7'
+
+	I originally added a decimal place to stones / ozs so I can graph it:
+
+	'15.7','15.3','15.0','14.12','14.10','14.7'
+
+	At a glance it looks like this should work.
+
+	However, the 14.7 is treated as 14.70 and therefore comes higher than 14.10.
+
+  I couldn't see a quick way to correct this. So to be safe (and save me time), I've changed it to display in pounds only
 
 = 1.4 =
 

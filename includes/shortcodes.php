@@ -208,7 +208,7 @@
 	
 	function ws_ls_display_chart($data)
 	{
-
+		$y_axis_unit = (WE_LS_IMPERIAL_WEIGHTS) ? "(lbs)" : "(Kg)";
 
 
  		$output = "<script src=\"". plugins_url( 'js/Chart.min.js', __FILE__ ) . "\" type=\"text/javascript\"></script>";
@@ -221,10 +221,14 @@
  		var data = {
 		    labels: [";
 
-		    foreach ($data as $row)
+	
+		    for($i=0; $i<count($data); $i++)
 		    {
+		    	$output .= "'" . $data[$i]->weight_date_formatted . "'";	
 
-		    	$output .= "'" . $row->weight_date_formatted . "',";		    
+		    	if ($i != count($data) -1)
+		    		$output .= ",";
+
 		    }
 
 		$output .= "], 
@@ -239,13 +243,22 @@
 		            pointHighlightStroke: 'rgba(220,220,220,1)',
 		            data: [";
    			
-   			foreach ($data as $row)
+   			
+		    for($i=0; $i<count($data); $i++)
 		    {
 		    	if(WE_LS_IMPERIAL_WEIGHTS)
-		    		$output .= "'" . $row->weight_stones . "." . $row->weight_pounds . "',";
+		    	{
+		    	
+		    		$pounds = ($data[$i]->weight_stones * 14) + $data[$i]->weight_pounds;
+
+		    		$output .= "'" . $pounds . "'";
+		    	}
 		    	else
-		    		$output .= "'" . $row->weight_weight . "',";
-	    
+		    		$output .= "'" . $data[$i]->weight_weight . "'";
+
+		    	if ($i != count($data) -1)
+		    		$output .= ",";
+
 		    }
 
 		$output .= "]
@@ -304,6 +317,23 @@
 		    //String - A legend template
 		    legendTemplate : '<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].lineColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>'
 
+
+			,graphTitle : '',
+			graphTitleFontFamily : 'Arial',
+			graphTitleFontSize : 24,
+			graphTitleFontStyle : 'bold',
+			graphTitleFontColor : '#666',
+
+			yAxisLabel : 'Weight " . $y_axis_unit . "',
+			yAxisFontFamily : 'Arial',
+			yAxisFontSize : 16,
+			yAxisFontStyle : 'normal',
+			yAxisFontColor : '#666',
+     		xAxisLabel : 'Date',
+	 	  	xAxisFontFamily : 'Arial',
+			xAxisFontSize : 13,
+			xAxisFontStyle : 'normal',
+			xAxisFontColor : '#666'
 		};
 
 
@@ -472,12 +502,12 @@ function ws_ls_get_weight_extreme($user_id, $recent = false)
 }
 function we_ls_format_weight_into_correct_string_format($weight)
 {
-	
+	echo "<Br />>" . $weight . "<Br />";
 	if(WE_LS_IMPERIAL_WEIGHTS)
 	{
 		$weight_data = ws_ls_to_stone_pounds($weight);
 
-		return $weight_data["Stones"] . "st " . $weight_data["Pounds"] . "lbs";
+		return $weight_data["Stones"] . "st ";;
 	}
 	else
 		return $weight . "kg";
@@ -525,5 +555,6 @@ function ws_ls_to_stone_pounds($kg)
     return $weight;
 
 }
+
 
 ?>
