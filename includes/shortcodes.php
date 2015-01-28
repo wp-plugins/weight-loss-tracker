@@ -5,18 +5,11 @@
 	{
 		$output = "";
 
-		/* $a = shortcode_atts( array(
-        'user_id' => 'default_value',
-        'another_one' => 'default_value',
-   		 ), $atts );
-		*/
-
-
 		if (!is_user_logged_in())
 		{
 			$output .= "
 							<blockquote><p>
-					        	You need to be logged in to record your weight.
+					        	" . __("You need to be logged in to record your weight.", WE_LS_SLUG) . "
 					    	</p></blockquote>
 						";
 		}
@@ -27,7 +20,7 @@
 				if (ws_ls_save_data())
 				{
 					$output .= "
-									<blockquote><p>Saved!</p></blockquote>
+									<blockquote><p>" . __("Saved!", WE_LS_SLUG) . "</p></blockquote>
 							    	
 								";
 
@@ -39,7 +32,7 @@
 
 			if (is_array($user_data) && count($user_data) > 1)
 			{
-				$output .= ws_ls_title("In a chart");
+				$output .= ws_ls_title(__("In a chart", WE_LS_SLUG));
 
 				$user_data_limited = ws_ls_get_weights(get_current_user_id(), 30);
 
@@ -49,7 +42,7 @@
 			{
 					$output .= "
 									<blockquote><p>
-							        	A pretty graph shall appear once you have recorded several weights.
+							        	" . __("A pretty graph shall appear once you have recorded several weights.", WE_LS_SLUG) . "
 							    	</p></blockquote>
 								";
 			}
@@ -84,8 +77,6 @@
 		
 		$form_class = (WE_LS_SUPPORT_AVADA_THEME) ? "avada-contact-form" :"ws_ls_display_form";
 		
-
-	
 		$output = "
 
 		<form action=\"" .  get_permalink() . "\" method=\"post\" class=\"" . $form_class .  "\" id=\"weight_form\">
@@ -95,20 +86,20 @@
 			
 			if(WE_LS_IMPERIAL_WEIGHTS)
 			{
-				$output .= "<input type=\"text\" name=\"weight_stones\" id=\"weight_stones\" value=\"\" placeholder=\"Stones\" size=\"11\" tabindex=\"2\" >";
-				$output .= "<input type=\"text\" name=\"weight_pounds\" id=\"weight_pounds\" value=\"\" placeholder=\"Pounds\" size=\"11\" tabindex=\"3\" >";
+				$output .= "<input type=\"text\" name=\"weight_stones\" id=\"weight_stones\" value=\"\" placeholder=\"" . __("Stones", WE_LS_SLUG) . "\" size=\"11\" tabindex=\"2\" >";
+				$output .= "<input type=\"text\" name=\"weight_pounds\" id=\"weight_pounds\" value=\"\" placeholder=\"" . __("Pounds", WE_LS_SLUG) . "\" size=\"11\" tabindex=\"3\" >";
 			}
 			else
-				$output .= "<input type=\"text\" name=\"weight_weight\" id=\"weight_weight\" value=\"\" placeholder=\"Weight (Kg)\" size=\"22\" tabindex=\"2\">";
+				$output .= "<input type=\"text\" name=\"weight_weight\" id=\"weight_weight\" value=\"\" placeholder=\"" . __("Weight", WE_LS_SLUG) . " (" . __("Kg", WE_LS_SLUG) . ")\" size=\"22\" tabindex=\"2\">";
 				
 			$output .= "</div>
 			<div id=\"comment-textarea\">
-				<textarea name=\"weight_notes\" id=\"weight_notes\" cols=\"39\" rows=\"4\" tabindex=\"4\" class=\"textarea-comment\" placeholder=\"Notes\"></textarea>
+				<textarea name=\"weight_notes\" id=\"weight_notes\" cols=\"39\" rows=\"4\" tabindex=\"4\" class=\"textarea-comment\" placeholder=\"" . __("Notes", WE_LS_SLUG) . "\"></textarea>
 			</div>
 			<div id=\"comment-submit-container\">
 				<p>
 					<div>
-						<input name=\"submit_button\" type=\"submit\" id=\"submit_button\" tabindex=\"5\" value=\"Save Entry\" class=\"comment-submit btn btn-default button default small fusion-button button-small button-default button-round button-flat\">
+						<input name=\"submit_button\" type=\"submit\" id=\"submit_button\" tabindex=\"5\" value=\"" . __("Save Entry", WE_LS_SLUG) . "\" class=\"comment-submit btn btn-default button default small fusion-button button-small button-default button-round button-flat\">
 					</div>
 				</p>
 			</div>
@@ -168,15 +159,15 @@
 		if (WE_LS_SUPPORT_AVADA_THEME) 
 				$output .= "<div class=\"fusion-table table-2\">";
 
-		$unit = (WE_LS_IMPERIAL_WEIGHTS) ? "St lbs" : "Kg";
+		$unit = (WE_LS_IMPERIAL_WEIGHTS) ? __("St", WE_LS_SLUG) . " " . __("lbs", WE_LS_SLUG) : __("Kg", WE_LS_SLUG);
 
 		$output .= "<table  width=\"100%\">
 		<thead>
 		<tr>
 			
-			<th>Date</th>
-			<th>Weight (" . $unit . ")</th>
-			<th>Notes</th>
+			<th>" . __("Date", WE_LS_SLUG) ."</th>
+			<th>" . __("Weight", WE_LS_SLUG) . " (" . $unit . ")</th>
+			<th>" . __("Notes", WE_LS_SLUG) . "</th>
 		</tr>
 		</thead>
 		<tbody>";
@@ -186,15 +177,15 @@
 
 
 		    	if(WE_LS_IMPERIAL_WEIGHTS)
-		    		$weight = $row->weight_stones . "st " . $row->weight_pounds . "lbs";
+		    		$weight = $row->weight_stones . __("st", WE_LS_SLUG) . " " . $row->weight_pounds . __("lbs", WE_LS_SLUG);
 		    	else
 		    		$weight = $row->weight_weight;
 
 		$output .= "<tr>
-				<td>" . $row->weight_date_formatted . "</td>
-				<td>" . $weight . "</td>
-				<td>" . esc_html($row->weight_notes) . "</td>
-			</tr>";
+						<td>" . $row->weight_date_formatted . "</td>
+						<td>" . $weight . "</td>
+						<td>" .  esc_html($row->weight_notes) . "</td>
+					</tr>";
 
 		}
 
@@ -208,7 +199,7 @@
 	
 	function ws_ls_display_chart($data)
 	{
-		$y_axis_unit = (WE_LS_IMPERIAL_WEIGHTS) ? "(lbs)" : "(Kg)";
+		$y_axis_unit = (WE_LS_IMPERIAL_WEIGHTS) ? "(" . __("lbs", WE_LS_SLUG) . ")" : "(" . __("Kg", WE_LS_SLUG) . ")";
 
 
  		$output = "<script src=\"". plugins_url( 'js/Chart.min.js', __FILE__ ) . "\" type=\"text/javascript\"></script>";
@@ -324,12 +315,12 @@
 			graphTitleFontStyle : 'bold',
 			graphTitleFontColor : '#666',
 
-			yAxisLabel : 'Weight " . $y_axis_unit . "',
+			yAxisLabel : '" . __("Weight", WE_LS_SLUG) . " " . $y_axis_unit . "',
 			yAxisFontFamily : 'Arial',
 			yAxisFontSize : 16,
 			yAxisFontStyle : 'normal',
 			yAxisFontColor : '#666',
-     		xAxisLabel : 'Date',
+     		xAxisLabel : '". __("Date", WE_LS_SLUG) ."',
 	 	  	xAxisFontFamily : 'Arial',
 			xAxisFontSize : 13,
 			xAxisFontStyle : 'normal',
@@ -402,6 +393,12 @@
 			// Convert stones / lbs to Kg
  			if(WE_LS_IMPERIAL_WEIGHTS)
 				$values["weight_weight"] =  ws_ls_to_kg($values["weight_stones"], $values["weight_pounds"] );
+			else // Convert Kg to Stones / Lbs
+			{
+				$weight_data = ws_ls_to_stone_pounds($values["weight_weight"]);
+				$values["weight_stones"] = $weight_data["Stones"];
+				$values["weight_pounds"] =  $weight_data["Pounds"];
+			}
 
 			if (!ws_date_exists($values["weight_user_id"], $values["weight_date"]))
 			{
@@ -416,7 +413,7 @@
 			else
 			{
 				if(!WE_LS_IMPERIAL_WEIGHTS)
-					$sql = $wpdb->prepare("Update " . $table_name. " Set weight_notes = %s, weight_weight = %f where weight_user_id = %d and weight_date = %s", $values['weight_notes'], $values["weight_weight"], $values["weight_user_id"], $values["weight_date"]);
+					$sql = $wpdb->prepare("Update " . $table_name. " Set weight_notes = %s, weight_weight = %f, weight_stones = %f, weight_pounds = %f where weight_user_id = %d and weight_date = %s", $values['weight_notes'], $values["weight_weight"], $values["weight_stones"], $values["weight_pounds"], $values["weight_user_id"], $values["weight_date"]);
 				else
 					$sql = $wpdb->prepare("Update " . $table_name. " Set weight_notes = %s, weight_weight = %f, weight_stones = %f, weight_pounds = %f where weight_user_id = %d and weight_date = %s", $values['weight_notes'], $values["weight_weight"], $values["weight_stones"], $values["weight_pounds"], $values["weight_user_id"], $values["weight_date"]);
 		
@@ -494,7 +491,7 @@ function ws_ls_get_weight_extreme($user_id, $recent = false)
 
 	$rows = $wpdb->get_row($sql);
 
-	if ($rows->iCount == 0)
+	if (count($rows) > 0)
 		return $rows->weight_weight;
 	else
 		return false;
@@ -502,15 +499,14 @@ function ws_ls_get_weight_extreme($user_id, $recent = false)
 }
 function we_ls_format_weight_into_correct_string_format($weight)
 {
-	echo "<Br />>" . $weight . "<Br />";
 	if(WE_LS_IMPERIAL_WEIGHTS)
 	{
 		$weight_data = ws_ls_to_stone_pounds($weight);
 
-		return $weight_data["Stones"] . "st ";;
+		return $weight_data["Stones"] . __("st", WE_LS_SLUG) . " " . (($weight_data["Pounds"] < 0) ? abs($weight_data["Pounds"]) : $weight_data["Pounds"]) . __("lbs", WE_LS_SLUG);
 	}
 	else
-		return $weight . "kg";
+		return $weight . __("Kg", WE_LS_SLUG);
 }
 function ws_ls_title($text)
 {
@@ -525,12 +521,12 @@ function ws_ls_to_kg($stones, $pounds)
 {
 	$pounds += $stones * 14;
 	
-	return round($pounds / 2.2, 2);
+	return round($pounds / 2.20462, 2);
 }
 
 function ws_ls_to_lb($kg)
 {
-	$pounds = $kg * 2.2;
+	$pounds = $kg * 2.20462;
 	
 	return round($pounds, 2);
 }
@@ -542,6 +538,9 @@ function ws_ls_to_stones($pounds)
 	return round($pounds, 2);
 }
 
+/*
+Old function no longer used (didn't work)
+
 function ws_ls_to_stone_pounds($kg)
 {
 
@@ -551,6 +550,20 @@ function ws_ls_to_stone_pounds($kg)
 
     $weight["Stones"] = round($totalPounds / 14, 2);
     $weight["Pounds"] = Round($totalPounds - ($weight["Pounds"] * 14), 0);
+
+    return $weight;
+
+}
+ */
+function ws_ls_to_stone_pounds($kg)
+{
+
+	$weight = array ("Stones" => 0, "Pounds" => 0);
+
+    $totalPounds = Round($kg * 2.20462, 3);
+
+    $weight["Stones"] = floor($totalPounds / 14);
+    $weight["Pounds"] = Round(fmod($totalPounds, 14), 1);
 
     return $weight;
 

@@ -4,13 +4,14 @@ defined('ABSPATH') or die("Jog on!");
 
 /**
  * Plugin Name: Weight Loss Tracker
- * Description: A simple plugin for user's to set their intitial weight and add subsequent weights. These are then displayed on a graph.
- * Version: 1.5
+ * Description: A simple plugin for user's to set their initial weight and add subsequent weights. These are then displayed on a graph.
+ * Version: 1.6
  * Author: YeKen
  * Author URI: http://www.YeKen.uk
  * License: GPL2
+ * Text Domain: weight-loss-tracker
  */
-/*  Copyright 2014 Ali Akro
+/*  Copyright 2014 YeKen.uk
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 
@@ -54,8 +55,15 @@ include WS_LS_ABSPATH . "general/include_files.php";
 include WS_LS_ABSPATH . "general/register_hooks.php";
 
 // -----------------------------------------------------------------------------------------
+// AC: Load relevant language files
+// -----------------------------------------------------------------------------------------
+var_dump(load_plugin_textdomain( WE_LS_SLUG, false, dirname( plugin_basename( __FILE__ )  ) . "/languages/" ));
+
+// -----------------------------------------------------------------------------------------
 // AC: DEV Stuff here (!!!! REMOVE !!!!)
 // -----------------------------------------------------------------------------------------
+
+
 
 
 ?>
