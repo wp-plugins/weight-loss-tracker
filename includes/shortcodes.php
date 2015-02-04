@@ -86,7 +86,9 @@
 			
 			if(WE_LS_IMPERIAL_WEIGHTS)
 			{
-				$output .= "<input type=\"text\" name=\"weight_stones\" id=\"weight_stones\" value=\"\" placeholder=\"" . __("Stones", WE_LS_SLUG) . "\" size=\"11\" tabindex=\"2\" >";
+				if (WE_LS_DATA_UNITS == "stones_pounds")
+					$output .= "<input type=\"text\" name=\"weight_stones\" id=\"weight_stones\" value=\"\" placeholder=\"" . __("Stones", WE_LS_SLUG) . "\" size=\"11\" tabindex=\"2\" >";
+
 				$output .= "<input type=\"text\" name=\"weight_pounds\" id=\"weight_pounds\" value=\"\" placeholder=\"" . __("Pounds", WE_LS_SLUG) . "\" size=\"11\" tabindex=\"3\" >";
 			}
 			else
@@ -116,11 +118,13 @@
 
                     if(WE_LS_IMPERIAL_WEIGHTS)
 					{
-						 $output .= " weight_stones:  {
-				                        required: true,
-				                        number: true
-				                    },
-				                    weight_pounds:  {
+						if (WE_LS_DATA_UNITS == "stones_pounds")
+							 $output .= " weight_stones:  {
+					                        required: true,
+					                        number: true
+					                    },";
+				        
+				        $output .= " weight_pounds:  {
 				                        required: true,
 				                        number: true
 				                    },";
@@ -159,7 +163,21 @@
 		if (WE_LS_SUPPORT_AVADA_THEME) 
 				$output .= "<div class=\"fusion-table table-2\">";
 
-		$unit = (WE_LS_IMPERIAL_WEIGHTS) ? __("St", WE_LS_SLUG) . " " . __("lbs", WE_LS_SLUG) : __("Kg", WE_LS_SLUG);
+		//$unit = (WE_LS_IMPERIAL_WEIGHTS) ? __("St", WE_LS_SLUG) . " " . __("lbs", WE_LS_SLUG) : __("Kg", WE_LS_SLUG);
+
+		switch (WE_LS_DATA_UNITS) {
+			case 'pounds_only':
+				$unit = __("lbs", WE_LS_SLUG); 
+				break;
+			case 'kg':
+				$unit = __("Kg", WE_LS_SLUG); 
+				break;
+			default:
+				$unit = __("St", WE_LS_SLUG) . " " . __("lbs", WE_LS_SLUG); 
+				break;
+		}
+
+
 
 		$output .= "<table  width=\"100%\">
 		<thead>
@@ -175,14 +193,20 @@
 		foreach ($data as $row)
 		    {
 
+		    	switch (WE_LS_DATA_UNITS) {
+					case 'pounds_only':
+						$weight = $row->weight_only_pounds; 
+						break;
+					case 'kg':
+						$weight = $row->weight_weight;
+						break;
+					default:
+						$weight = $row->weight_stones . __("st", WE_LS_SLUG) . " " . $row->weight_pounds . __("lbs", WE_LS_SLUG);
+						break;
+				}
 
-		    	if(WE_LS_IMPERIAL_WEIGHTS)
-		    		$weight = $row->weight_stones . __("st", WE_LS_SLUG) . " " . $row->weight_pounds . __("lbs", WE_LS_SLUG);
-		    	else
-		    		$weight = $row->weight_weight;
-
-		$output .= "<tr>
-						<td>" . $row->weight_date_formatted . "</td>
+				$output .= "<tr>
+						<td>" . $row->standard_date . "</td>
 						<td>" . $weight . "</td>
 						<td>" .  esc_html($row->weight_notes) . "</td>
 					</tr>";
@@ -215,7 +239,7 @@
 	
 		    for($i=0; $i<count($data); $i++)
 		    {
-		    	$output .= "'" . $data[$i]->weight_date_formatted . "'";	
+		    	$output .= "'" . date_i18n( "j M", strtotime( $data[$i]->standard_date ) ) . "'";	
 
 		    	if ($i != count($data) -1)
 		    		$output .= ",";
@@ -352,7 +376,7 @@
 
    		$table_name = $wpdb->prefix . WE_LS_TABLENAME;
 
-   		$sql =  $wpdb->prepare("SELECT DATE_FORMAT(weight_date,'%%d %%b') as weight_date_formatted, weight_date, weight_weight, weight_stones, weight_pounds, weight_notes FROM $table_name where weight_user_id = %d order by weight_date limit 0, %d", $user_id,  $limit);
+   		$sql =  $wpdb->prepare("SELECT DATE_FORMAT(weight_date,'%%d %%b') as weight_date_formatted, weight_date, date(weight_date) as standard_date, weight_weight, weight_stones, weight_pounds, weight_only_pounds, weight_notes FROM $table_name where weight_user_id = %d order by weight_date limit 0, %d", $user_id,  $limit);
 
 		$rows = $wpdb->get_results( $sql );
 
@@ -392,12 +416,29 @@
 
 			// Convert stones / lbs to Kg
  			if(WE_LS_IMPERIAL_WEIGHTS)
-				$values["weight_weight"] =  ws_ls_to_kg($values["weight_stones"], $values["weight_pounds"] );
+ 			{
+				if (WE_LS_DATA_UNITS == "stones_pounds")
+				{
+					$values["weight_weight"] =  ws_ls_to_kg($values["weight_stones"], $values["weight_pounds"] );
+					$values["weight_only_pounds"] = ($values["weight_stones"] * 14) + $values["weight_pounds"];
+				}
+				else
+				{
+					$values["weight_weight"] =  ws_ls_pounds_to_kg($values["weight_pounds"]);
+					$values["weight_only_pounds"] = $values["weight_pounds"];
+
+					$weight_data = ws_ls_pounds_to_stone_pounds($values["weight_pounds"]);
+
+					$values["weight_stones"] = $weight_data["Stones"];
+					$values["weight_pounds"] =  $weight_data["Pounds"];
+				}
+			}
 			else // Convert Kg to Stones / Lbs
 			{
 				$weight_data = ws_ls_to_stone_pounds($values["weight_weight"]);
 				$values["weight_stones"] = $weight_data["Stones"];
 				$values["weight_pounds"] =  $weight_data["Pounds"];
+				$values["weight_only_pounds"] = ($values["weight_stones"] * 14) + $values["weight_pounds"];
 			}
 
 			if (!ws_date_exists($values["weight_user_id"], $values["weight_date"]))
@@ -413,9 +454,9 @@
 			else
 			{
 				if(!WE_LS_IMPERIAL_WEIGHTS)
-					$sql = $wpdb->prepare("Update " . $table_name. " Set weight_notes = %s, weight_weight = %f, weight_stones = %f, weight_pounds = %f where weight_user_id = %d and weight_date = %s", $values['weight_notes'], $values["weight_weight"], $values["weight_stones"], $values["weight_pounds"], $values["weight_user_id"], $values["weight_date"]);
+					$sql = $wpdb->prepare("Update " . $table_name. " Set weight_notes = %s, weight_weight = %f, weight_stones = %f, weight_pounds = %f, weight_only_pounds = %f where weight_user_id = %d and weight_date = %s", $values['weight_notes'], $values["weight_weight"], $values["weight_stones"], $values["weight_pounds"], $values["weight_only_pounds"], $values["weight_user_id"], $values["weight_date"]);
 				else
-					$sql = $wpdb->prepare("Update " . $table_name. " Set weight_notes = %s, weight_weight = %f, weight_stones = %f, weight_pounds = %f where weight_user_id = %d and weight_date = %s", $values['weight_notes'], $values["weight_weight"], $values["weight_stones"], $values["weight_pounds"], $values["weight_user_id"], $values["weight_date"]);
+					$sql = $wpdb->prepare("Update " . $table_name. " Set weight_notes = %s, weight_weight = %f, weight_stones = %f, weight_pounds = %f, weight_only_pounds = %f where weight_user_id = %d and weight_date = %s", $values['weight_notes'], $values["weight_weight"], $values["weight_stones"], $values["weight_pounds"], $values["weight_only_pounds"], $values["weight_user_id"], $values["weight_date"]);
 		
 				$wpdb->query($sql);
 			
@@ -444,20 +485,35 @@ function ws_ls_register_shortcodes()
 
 function ws_ls_weight_start()
 {
-	$weight = ws_ls_get_weight_extreme(get_current_user_id());
+	if (WE_LS_DATA_UNITS == "pounds_only")
+		$weight = ws_ls_get_start_weight_in_pounds();
+	else
+		$weight = ws_ls_get_weight_extreme(get_current_user_id());
 
 	return we_ls_format_weight_into_correct_string_format($weight);
 }
 function ws_ls_weight_recent()
 {
-	$weight =  ws_ls_get_weight_extreme(get_current_user_id(), true);
+	if (WE_LS_DATA_UNITS == "pounds_only")
+		$weight =  ws_ls_get_recent_weight_in_pounds();
+	else
+		$weight =  ws_ls_get_weight_extreme(get_current_user_id(), true);
 
 	return we_ls_format_weight_into_correct_string_format($weight);
 }
 function ws_ls_weight_difference()
 {
-	$start_weight = ws_ls_get_start_weight_in_kg();
-	$recent_weight = ws_ls_get_weight_extreme(get_current_user_id(), true);
+	if (WE_LS_DATA_UNITS == "pounds_only")
+	{
+		$start_weight = ws_ls_get_start_weight_in_pounds();
+		$recent_weight = ws_ls_get_recent_weight_in_pounds();
+	}
+	else
+	{
+		$start_weight = ws_ls_get_start_weight_in_kg();
+		$recent_weight = ws_ls_get_weight_extreme(get_current_user_id(), true);
+	}
+	
 	$difference = $recent_weight - $start_weight;
 
 	$display_string = ($difference > 0) ? "+" : ""; 
@@ -475,8 +531,16 @@ function ws_ls_get_recent_weight_in_kg()
 {
 	return ws_ls_get_weight_extreme(get_current_user_id(), true);
 }
+function ws_ls_get_start_weight_in_pounds()
+{
+	return ws_ls_get_weight_extreme(get_current_user_id(), false, "weight_only_pounds");
+}
+function ws_ls_get_recent_weight_in_pounds()
+{
+	return ws_ls_get_weight_extreme(get_current_user_id(), true, "weight_only_pounds");
+}
 
-function ws_ls_get_weight_extreme($user_id, $recent = false)
+function ws_ls_get_weight_extreme($user_id, $recent = false, $unit = "weight_weight")
 {
 	global $wpdb;
 
@@ -487,12 +551,12 @@ function ws_ls_get_weight_extreme($user_id, $recent = false)
 
 	$table_name = $wpdb->prefix . WE_LS_TABLENAME;
 
-	$sql =  $wpdb->prepare("SELECT weight_weight FROM $table_name where weight_user_id = %d order by weight_date " . $direction . " limit 0, %d", $user_id, 1);
+	$sql =  $wpdb->prepare("SELECT " . $unit . " as weight_value FROM $table_name where weight_user_id = %d order by weight_date " . $direction . " limit 0, %d", $user_id, 1);
 
 	$rows = $wpdb->get_row($sql);
 
 	if (count($rows) > 0)
-		return $rows->weight_weight;
+		return $rows->weight_value;
 	else
 		return false;
 
@@ -501,9 +565,14 @@ function we_ls_format_weight_into_correct_string_format($weight)
 {
 	if(WE_LS_IMPERIAL_WEIGHTS)
 	{
-		$weight_data = ws_ls_to_stone_pounds($weight);
-
-		return $weight_data["Stones"] . __("st", WE_LS_SLUG) . " " . (($weight_data["Pounds"] < 0) ? abs($weight_data["Pounds"]) : $weight_data["Pounds"]) . __("lbs", WE_LS_SLUG);
+		if (WE_LS_DATA_UNITS == "pounds_only")
+			return $weight . __("lbs", WE_LS_SLUG);
+		else
+		{
+			$weight_data = ws_ls_to_stone_pounds($weight);
+			return $weight_data["Stones"] . __("st", WE_LS_SLUG) . " " . (($weight_data["Pounds"] < 0) ? abs($weight_data["Pounds"]) : $weight_data["Pounds"]) . __("lbs", WE_LS_SLUG);
+		}
+			
 	}
 	else
 		return $weight . __("Kg", WE_LS_SLUG);
@@ -523,6 +592,10 @@ function ws_ls_to_kg($stones, $pounds)
 	
 	return round($pounds / 2.20462, 2);
 }
+function ws_ls_pounds_to_kg($pounds)
+{
+	return round($pounds / 2.20462, 2);
+}
 
 function ws_ls_to_lb($kg)
 {
@@ -538,23 +611,17 @@ function ws_ls_to_stones($pounds)
 	return round($pounds, 2);
 }
 
-/*
-Old function no longer used (didn't work)
-
-function ws_ls_to_stone_pounds($kg)
+function ws_ls_pounds_to_stone_pounds($lb)
 {
 
 	$weight = array ("Stones" => 0, "Pounds" => 0);
 
-    $totalPounds = Round($kg * 2.20462, 3);
-
-    $weight["Stones"] = round($totalPounds / 14, 2);
-    $weight["Pounds"] = Round($totalPounds - ($weight["Pounds"] * 14), 0);
+    $weight["Stones"] = floor($lb / 14);
+     $weight["Pounds"] = Round(fmod($lb, 14), 1);
 
     return $weight;
-
 }
- */
+
 function ws_ls_to_stone_pounds($kg)
 {
 
@@ -566,7 +633,6 @@ function ws_ls_to_stone_pounds($kg)
     $weight["Pounds"] = Round(fmod($totalPounds, 14), 1);
 
     return $weight;
-
 }
 
 

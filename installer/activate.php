@@ -11,7 +11,6 @@
 
    		$table_name = $wpdb->prefix . WE_LS_TABLENAME;
 		
-
 		$charset_collate = $wpdb->get_charset_collate();
 
 		$sql = "CREATE TABLE $table_name (
@@ -21,11 +20,15 @@
 		  weight_weight decimal NOT NULL,
 		  weight_stones decimal NOT NULL,
 		  weight_pounds decimal NOT NULL,
+		  weight_only_pounds decimal NOT NULL,
 		  weight_notes text null,
 		  UNIQUE KEY id (id)
 		) $charset_collate;";
 
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		dbDelta( $sql );
+
+		$sql = "ALTER TABLE $table_name ADD COLUMN weight_only_pounds decimal NOT NULL";
 		dbDelta( $sql );
 	}
 

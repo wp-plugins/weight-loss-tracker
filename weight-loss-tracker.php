@@ -57,7 +57,7 @@ include WS_LS_ABSPATH . "general/register_hooks.php";
 // -----------------------------------------------------------------------------------------
 // AC: Load relevant language files
 // -----------------------------------------------------------------------------------------
-var_dump(load_plugin_textdomain( WE_LS_SLUG, false, dirname( plugin_basename( __FILE__ )  ) . "/languages/" ));
+load_plugin_textdomain( WE_LS_SLUG, false, dirname( plugin_basename( __FILE__ )  ) . "/languages/" );
 
 // -----------------------------------------------------------------------------------------
 // AC: DEV Stuff here (!!!! REMOVE !!!!)
