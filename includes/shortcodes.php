@@ -46,12 +46,12 @@
 							    	</p></blockquote>
 								";
 			}
-			$output .= ws_ls_title("Add a new weight");
+			$output .= ws_ls_title(__("Add a new weight", WE_LS_SLUG));
 			$output .= ws_ls_display_form();
 
 			if (is_array($user_data) && count($user_data) > 0)
 			{
-				$output .= ws_ls_title("Weight History");
+				$output .= ws_ls_title(__("Weight History", WE_LS_SLUG));
 
 				$output .= ws_ls_display_table($user_data);
 			}

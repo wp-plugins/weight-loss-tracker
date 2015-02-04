@@ -3,10 +3,10 @@ Contributors: aliakro
 Tags: weight, graph, track, stones, kg, table, data, plot
 Requires at least: 4.0.0
 Tested up to: 4.1
-Stable tag: 1.5
+Stable tag: 1.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Donate link: http://www.yeken.uk
+Donate link: Paypal: email@YeKen.uk
 
 A very simple plugin to allow a logged in user to record their weight on given dates. This data is then shown in a graph (ChartNew.js) and table.
 
@@ -38,6 +38,8 @@ Languages supported:
 - Need a translation? Email us: email@YeKen.uk
 
 * Developed by YeKen.uk *
+
+Paypal Donate: email@YeKen.uk
 
 == Installation ==
 

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2015-01-28 14:01-0000\n"
-"PO-Revision-Date: 2015-02-03 19:57+0200\n"
+"POT-Creation-Date: 2015-02-04 09:09-0000\n"
+"PO-Revision-Date: 2015-02-04 09:38-0000\n"
 "Last-Translator: Alex\n"
 "Language-Team: \n"
 "Language: en_GB\n"
@@ -13,8 +13,10 @@ msgstr ""
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-KeywordsList: __;_e\n"
-"X-Poedit-SearchPathExcluded-0: C:\\www\\wordpress_test\\wp-content\\plugins\\weight-loss-tracker\\includes/js\n"
-"X-Poedit-SearchPath-0: C:\\www\\wordpress_test\\wp-content\\plugins\\weight-loss-tracker\\includes\n"
+"X-Poedit-SearchPath-0: C:\\www\\wordpress_test\\wp-content\\plugins\\weight-"
+"loss-tracker\\includes\n"
+"X-Poedit-SearchPathExcluded-0: C:\\www\\wordpress_test\\wp-content\\plugins"
+"\\weight-loss-tracker\\includes/js\n"
 
 #: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:12
 msgid "You need to be logged in to record your weight."
@@ -30,56 +32,67 @@ msgstr "Dans un graphique"
 
 #: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:45
 msgid "A pretty graph shall appear once you have recorded several weights."
-msgstr "Un joli graphique doit apparaître ici après que vous avez enregistré plusieurs poids."
+msgstr ""
+"Un joli graphique doit apparaître ici après que vous avez enregistré "
+"plusieurs poids."
 
-#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:89
+#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:49
+msgid "Add a new weight"
+msgstr "Ajouter un nouveau poids"
+
+#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:54
+msgid "Weight History"
+msgstr "Poids Histoire"
+
+#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:90
 msgid "Stones"
 msgstr "Stones"
 
-#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:90
+#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:92
 msgid "Pounds"
 msgstr "Livres"
 
-#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:93
-#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:169
-#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:318
+#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:95
+#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:187
+#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:342
 msgid "Weight"
 msgstr "Poids"
 
-#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:93
-#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:162
-#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:202
-#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:509
+#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:95
+#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:173
+#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:226
+#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:578
 msgid "Kg"
 msgstr "Kg"
 
-#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:97
-#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:170
+#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:99
+#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:188
 msgid "Notes"
 msgstr "Remarques"
 
-#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:102
+#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:104
 msgid "Save Entry"
 msgstr "Enregistrer"
 
-#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:162
-msgid "St"
-msgstr "St"
-
-#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:162
-#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:180
-#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:202
-#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:506
+#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:170
+#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:176
+#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:204
+#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:226
+#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:569
+#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:573
 msgid "lbs"
 msgstr "lbs"
 
-#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:168
-#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:323
+#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:176
+msgid "St"
+msgstr "St"
+
+#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:186
+#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:347
 msgid "Date"
 msgstr "Date"
 
-#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:180
-#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:506
+#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:204
+#: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:573
 msgid "st"
 msgstr "st"
-
