@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2015-02-04 09:38-0000\n"
-"PO-Revision-Date: 2015-02-04 09:38-0000\n"
+"PO-Revision-Date: 2015-02-04 12:59-0000\n"
 "Last-Translator: Alex\n"
 "Language-Team: \n"
 "Language: en_GB\n"
@@ -40,7 +40,7 @@ msgstr "Adaugă greutate"
 
 #: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:54
 msgid "Weight History"
-msgstr "Istoricul Greutătii"
+msgstr "Istoric greutate"
 
 #: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:90
 msgid "Stones"
