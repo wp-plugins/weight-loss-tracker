@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2015-02-04 09:38-0000\n"
-"PO-Revision-Date: 2015-02-04 09:38-0000\n"
-"Last-Translator: Alex\n"
+"POT-Creation-Date: 2015-02-04 09:09-0000\n"
+"PO-Revision-Date: 2015-02-23 16:23-0000\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_GB\n"
 "MIME-Version: 1.0\n"
@@ -20,27 +20,29 @@ msgstr ""
 
 #: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:12
 msgid "You need to be logged in to record your weight."
-msgstr "Trebuie să fii autentificat ca să îți inregistrezi greutatea."
+msgstr "Je moet ingelogd zijn om je gewicht op te slaan."
 
 #: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:23
 msgid "Saved!"
-msgstr "Salvat!"
+msgstr "Opgeslagen!"
 
 #: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:35
 msgid "In a chart"
-msgstr "Într-un grafic"
+msgstr "In een grafiek"
 
 #: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:45
 msgid "A pretty graph shall appear once you have recorded several weights."
-msgstr "Un grafic drăguț va apărea aici după ce introduci câteva înregistrari."
+msgstr ""
+"Een grafiek zal verschijnen zodra je je gewicht op meerdere data hebt "
+"ingevuld."
 
 #: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:49
 msgid "Add a new weight"
-msgstr "Adaugă greutate"
+msgstr "Voeg een nieuw gewicht toe"
 
 #: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:54
 msgid "Weight History"
-msgstr "Istoricul Greutătii"
+msgstr "Gewicht geschiedenis"
 
 #: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:90
 msgid "Stones"
@@ -48,13 +50,13 @@ msgstr "Stone"
 
 #: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:92
 msgid "Pounds"
-msgstr "Livre"
+msgstr "Ponden"
 
 #: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:95
 #: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:187
 #: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:342
 msgid "Weight"
-msgstr "Greutate"
+msgstr "Gewicht"
 
 #: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:95
 #: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:173
@@ -66,11 +68,11 @@ msgstr "Kg"
 #: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:99
 #: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:188
 msgid "Notes"
-msgstr "Notițe"
+msgstr "Notities"
 
 #: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:104
 msgid "Save Entry"
-msgstr "Salvează"
+msgstr "Invoer opslaan"
 
 #: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:170
 #: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:176
@@ -88,7 +90,7 @@ msgstr "St"
 #: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:186
 #: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:347
 msgid "Date"
-msgstr "Data"
+msgstr "Datum"
 
 #: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:204
 #: C:\www\wordpress_test\wp-content\plugins\weight-loss-tracker\includes/shortcodes.php:573
