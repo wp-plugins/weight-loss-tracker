@@ -82,7 +82,7 @@
 		<form action=\"" .  get_permalink() . "\" method=\"post\" class=\"" . $form_class .  "\" id=\"weight_form\">
 			<input type=\"hidden\" value=\"\" name=\"weight_user_id\">
 			<div id=\"comment-input\">
-				<input type=\"date\" name=\"weight_date\" id=\"weight_date\" value=\"" . date("Y-m-d") . "\" placeholder=\"" . date("Y-m-d") . "\" size=\"22\" tabindex=\"1\">";
+				<input type=\"text\" name=\"weight_date\" id=\"weight_date\" value=\"" . date("Y-m-d") . "\" placeholder=\"" . date("Y-m-d") . "\" size=\"22\" tabindex=\"1\">";
 			
 			if(WE_LS_IMPERIAL_WEIGHTS)
 			{
@@ -113,7 +113,7 @@
                 rules: {
                     weight_date:  {
                         required: true,
-                        date: true
+                        dateISO: true
                     },";
 
                     if(WE_LS_IMPERIAL_WEIGHTS)
@@ -147,6 +147,14 @@
                     form.submit();
                 }
             });
+
+			   jQuery('#weight_date').datepicker({
+	                              changeMonth: true,
+	                              changeYear: true,
+	                                showButtonPanel: true,
+	                                dateFormat: 'yy-mm-dd'
+	                            });
+		
 
 			});
 		</script>
