@@ -30,6 +30,8 @@
 
 		$sql = "ALTER TABLE $table_name ADD COLUMN weight_only_pounds decimal NOT NULL";
 		dbDelta( $sql );
+
+		ws_ls_upgrade_check();
 	}
 
 ?>

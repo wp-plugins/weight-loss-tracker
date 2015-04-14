@@ -3,16 +3,16 @@ Contributors: aliakro
 Tags: weight, graph, track, stones, kg, table, data, plot
 Requires at least: 4.0.0
 Tested up to: 4.1
-Stable tag: 1.8
+Stable tag: 1.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: Paypal: email@YeKen.uk
 
-A very simple plugin to allow a logged in user to record their weight on given dates. This data is then shown in a graph (ChartNew.js) and table.
+A simple plugin to allow a logged in user to record their weight on given dates. This data is then shown in a graph (ChartNew.js) and table.
 
 == Description ==
 
-A very simple plugin to allow a logged in user to record their weight on given dates. This data is then shown in a graph (ChartNew.js) and table.
+A simple plugin to allow a logged in user to record their weight on given dates. This data is then shown in a graph (ChartNew.js) and table.
 
 Place the tag [weightlosstracker] on a given page and the user is presented with a form to enter a date, weight and notes for that entry. When the person saves their entry the data table and graph is refreshed.
 
@@ -29,6 +29,7 @@ Also supports the following tags:
 	[weightloss_weight_difference] - total weight lost by the logged in member
 	[weightloss_weight_start] - start weight of the logged in member
 	[weightloss_weight_most_recent] - end weight of the logged in member
+	[weightloss_weight_difference_from_target] - end weight of the logged in member
 
 Languages supported:
 
@@ -52,7 +53,7 @@ Paypal Donate: email@YeKen.uk
 
 = Does it create any custom mySQL tables =
 
-Yes it creates one to store weight information per user
+Yes it creates two. One to store weight information per user and another to store target weights.
 
 = Does it support the Avada theme? =
 
@@ -71,13 +72,23 @@ In general/define_globals.php set WE_LS_IMPERIAL_UNITS set the value to either:
 
 = Can I change measurement units while the site is live? =
 
-It is only recommended if you first installed the plugin at version 1.6 (as it stores measurements in Kg / Pound). Before this, you may find data isn't present for previous date entries.
+It is only recommended if you first installed the plugin at version 1.6+ (as it stores measurements in Kg / Pound). Before this, you may find data isn't present for previous date entries.
+
+= How do I disable "Target weight" =
+
+In general/define_globals.php set WE_LS_ALLOW_TARGET_WEIGHTS set to false
 
 == Screenshots ==
 
 1. A basic view of the plugin displayed to the user (in Avada theme support mode)
 
 == Changelog ==
+
+= 1.9 =
+
+- Users can now specify their target weight
+- New short code [weightloss_weight_difference_from_target] - end weight of the logged in member to display the difference between target and latest weight
+- New filters to filter data by week
 
 = 1.8 =
 

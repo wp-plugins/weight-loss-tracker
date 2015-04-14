@@ -28,7 +28,15 @@
 				
 			}
 
-			$user_data = ws_ls_get_weights(get_current_user_id());
+			$selected_week_number = -1;
+			if ( $_POST && isset($_POST["week_number"]) && is_numeric($_POST["week_number"]))
+				$selected_week_number = $_POST["week_number"];
+
+			$week_ranges = ws_ls_get_week_ranges();
+
+			$user_data = ws_ls_get_weights(get_current_user_id(), 100, $selected_week_number);
+
+					
 
 			if (is_array($user_data) && count($user_data) > 1)
 			{
@@ -37,6 +45,8 @@
 				$user_data_limited = ws_ls_get_weights(get_current_user_id(), 30);
 
 				$output .= ws_ls_display_chart($user_data_limited);
+
+				//$output .= ws_ls_display_week_filters($week_ranges, $selected_week_number);
 			}
 			else
 			{
@@ -46,12 +56,14 @@
 							    	</p></blockquote>
 								";
 			}
-			$output .= ws_ls_title(__("Add a new weight", WE_LS_SLUG));
+			
 			$output .= ws_ls_display_form();
 
-			if (is_array($user_data) && count($user_data) > 0)
+			if (is_array($user_data) && (count($user_data) > 0 || $selected_week_number != -1))
 			{
 				$output .= ws_ls_title(__("Weight History", WE_LS_SLUG));
+
+				$output .= ws_ls_display_week_filters($week_ranges, $selected_week_number);
 
 				$output .= ws_ls_display_table($user_data);
 			}
@@ -61,7 +73,46 @@
 		
 	}
 
-	
+	function ws_ls_display_week_filters($week_ranges, $selected_week_number)
+	{
+		$output = "";
+
+		if ($week_ranges != false && count($week_ranges > 1))
+		{
+
+			$output .=  "<form action=\"" .  get_permalink() . "\" method=\"post\">";
+			$output .=  "<input type=\"hidden\" value=\"true\" name=\"week_filter\">";
+			$output .=  "<div class=\"ws_ls_week_controls\">";
+
+			$output .= "<select name=\"week_number\" onchange=\"this.form.submit()\">";
+
+				$output .= "<option value=\"-1\" " . (($selected_week_number == -1) ?  " selected=\"selected\"" : "") . ">". __("View all weeks", WE_LS_SLUG) . "</option>";
+				
+
+			foreach ($week_ranges as $week) {
+
+				$start_date = new DateTime($week["start"]);
+				$start_date = $start_date->format("d/m/Y");
+
+				$end_date = new DateTime($week["end"]);
+				$end_date = $end_date->format("d/m/Y");
+
+				$output .= "<option value=\"" . $week["number"] . "\" " . (($selected_week_number == $week["number"]) ? " selected=\"selected\"" : "") . ">
+
+				" . __("View Week", WE_LS_SLUG) . " " . $week["number"] . " - " . $start_date . " " . __("to", WE_LS_SLUG) . " " . $end_date . "</option>";
+				 
+			}
+
+			$output .= "</select>";
+
+
+			$output .= "</div>";
+			$output .= "</form>";
+		}
+
+		return $output;
+
+	}
 
 
 	function ws_ls_display_form()
@@ -77,7 +128,48 @@
 		
 		$form_class = (WE_LS_SUPPORT_AVADA_THEME) ? "avada-contact-form" :"ws_ls_display_form";
 		
-		$output = "
+		$output = "";
+
+		if (WE_LS_ALLOW_TARGET_WEIGHTS)
+		{
+			$output .= ws_ls_title(__("Target Weight", WE_LS_SLUG)) ;
+
+			$output .= "<form action=\"" .  get_permalink() . "\" method=\"post\" class=\"" . $form_class .  "\" id=\"weight_form\">";
+
+			$target_weight = ws_ls_get_user_target_for_display(get_current_user_id()) ;
+
+			if ($target_weight != false)
+				$output .="<p>" . __("Your current target is", WE_LS_SLUG) . " ". $target_weight . "</p>";
+			else
+				$output .="<p>" . __("Currently, you haven't specified a target weight.", WE_LS_SLUG) . "</p>";	
+
+			$output .= "<div id=\"comment-input\">";
+			
+			if(WE_LS_IMPERIAL_WEIGHTS)
+			{
+				if (WE_LS_DATA_UNITS == "stones_pounds")
+					$output .= "<input type=\"text\" name=\"target_weight_stones\" id=\"target_weight_stones\" value=\"\" placeholder=\"" . __("Stones", WE_LS_SLUG) . "\" size=\"11\" tabindex=\"2\" >";
+
+				$output .= "<input type=\"text\" name=\"target_weight_pounds\" id=\"target_weight_pounds\" value=\"\" placeholder=\"" . __("Pounds", WE_LS_SLUG) . "\" size=\"11\" tabindex=\"3\" >";
+			}
+			else
+				$output .= "<input type=\"text\" name=\"target_weight_weight\" id=\"target_weight_weight\" value=\"\" placeholder=\"" . __("Weight", WE_LS_SLUG) . " (" . __("Kg", WE_LS_SLUG) . ")\" size=\"22\" tabindex=\"2\">";
+			
+			$output .= "
+			<div id=\"comment-submit-container\">
+				<p>
+					<div>
+						<input name=\"target_button\" type=\"submit\" id=\"target_button\" tabindex=\"5\" value=\"" . __("Update Target", WE_LS_SLUG) . "\" class=\"comment-submit btn btn-default button default small fusion-button button-small button-default button-round button-flat\">
+					</div>
+				</p>
+			</div></div>
+			</form>";
+
+		}
+
+		
+
+		$output .= ws_ls_title(__("Add a new weight", WE_LS_SLUG)) . "
 
 		<form action=\"" .  get_permalink() . "\" method=\"post\" class=\"" . $form_class .  "\" id=\"weight_form\">
 			<input type=\"hidden\" value=\"\" name=\"weight_user_id\">
@@ -164,14 +256,8 @@
 		return $output;
 
 	}
-	function ws_ls_display_table($data)
+	function ws_ls_get_unit()
 	{
-		$output = "";
-
-		if (WE_LS_SUPPORT_AVADA_THEME) 
-				$output .= "<div class=\"fusion-table table-2\">";
-
-		//$unit = (WE_LS_IMPERIAL_WEIGHTS) ? __("St", WE_LS_SLUG) . " " . __("lbs", WE_LS_SLUG) : __("Kg", WE_LS_SLUG);
 
 		switch (WE_LS_DATA_UNITS) {
 			case 'pounds_only':
@@ -185,7 +271,16 @@
 				break;
 		}
 
+		return $unit;
+	}
+	function ws_ls_display_table($data)
+	{
+		$output = "";
 
+		if (WE_LS_SUPPORT_AVADA_THEME) 
+				$output .= "<div class=\"fusion-table table-2\">";
+
+		$unit = ws_ls_get_unit();
 
 		$output .= "<table  width=\"100%\">
 		<thead>
@@ -285,8 +380,49 @@
 		    }
 
 		$output .= "]
-		        }
-		    
+		        }";
+
+
+		 $target_weight = ws_ls_get_user_target(get_current_user_id());
+
+		 if ( $target_weight != false && WE_LS_ALLOW_TARGET_WEIGHTS)
+		 {
+
+		 	$output .= ",
+		         {
+		            label: 'Target',
+		            fillColor: 'rgba(255,255,255,0.2)',
+		            strokeColor: 'rgba(153,204,255,1)',
+		            pointColor: 'rgba(153,204,255,1)',
+		            pointStrokeColor: '#fff',
+		            pointHighlightFill: '#fff',
+		            pointHighlightStroke: 'rgba(220,220,220,1)',
+		            data: [";
+   			
+   			
+
+
+			    for($i=0; $i<count($data); $i++)
+			    {
+			    	if(WE_LS_IMPERIAL_WEIGHTS)
+			    	{
+			    	
+			    		$pounds = ($target_weight->target_weight_stones * 14) + $target_weight->target_weight_pounds;
+
+			    		$output .= "'" . $pounds . "'";
+			    	}
+			    	else
+			    		$output .= "'" . $target_weight->target_weight_weight . "'";
+
+			    	if ($i != count($data) -1)
+			    		$output .= ",";
+
+			    }
+
+				$output .= "]
+		        }";
+		 }
+		    $output .= "
 		    ]
 		};
 
@@ -317,7 +453,7 @@
 		    bezierCurveTension : 0.4,
 
 		    //Boolean - Whether to show a dot for each point
-		    pointDot : true,
+		    pointDot : false,
 
 		    //Number - Radius of each point dot in pixels
 		    pointDotRadius : 4,
@@ -378,18 +514,130 @@
  		return $output;
 	}
 
-	function ws_ls_get_weights($user_id, $limit = 100)
+	function ws_ls_get_weights($user_id, $limit = 100, $selected_week_number = -1)
 	{
+		$additional_sql = "";
+
+		if ($selected_week_number != -1)
+		{
+			$week_ranges = ws_ls_get_week_ranges();
+
+			foreach ($week_ranges as $week) {
+				 if ($week["number"] == $selected_week_number)
+				 {
+				 	$additional_sql = " and (weight_date BETWEEN '" . $week["start"] . "' AND '" . $week["end"] . "')";
+				 }
+			}
+		}
+
 		global $wpdb;
 
    		$table_name = $wpdb->prefix . WE_LS_TABLENAME;
 
-   		$sql =  $wpdb->prepare("SELECT DATE_FORMAT(weight_date,'%%d %%b') as weight_date_formatted, weight_date, date(weight_date) as standard_date, weight_weight, weight_stones, weight_pounds, weight_only_pounds, weight_notes FROM $table_name where weight_user_id = %d order by weight_date limit 0, %d", $user_id,  $limit);
+   		$sql =  $wpdb->prepare("SELECT DATE_FORMAT(weight_date,'%%d %%b') as weight_date_formatted, weight_date, date(weight_date) as standard_date, weight_weight, weight_stones, weight_pounds, weight_only_pounds, weight_notes FROM $table_name where weight_user_id = %d " . $additional_sql. " order by weight_date limit 0, %d", $user_id,  $limit);
 
 		$rows = $wpdb->get_results( $sql );
 
 		return $rows;
 
+	}
+	function ws_ls_get_min_max_dates($user_id)
+	{
+		global $wpdb;
+
+   		$table_name = $wpdb->prefix . WE_LS_TABLENAME;
+
+   		$sql =  $wpdb->prepare("SELECT min(weight_date) as min_date, max(weight_date) as max_date FROM " . $table_name . " WHERE weight_user_id = %d", $user_id);
+
+		$row = $wpdb->get_row($sql);
+
+		if (!is_null($row))
+			return $row;
+
+		return false;
+	}
+	function ws_ls_get_week_ranges()
+	{
+		
+		$entered_date_ranges = ws_ls_get_min_max_dates(get_current_user_id());
+
+		if ($entered_date_ranges != false)
+		{
+
+			$start_date = new DateTime($entered_date_ranges->min_date);
+			$end_date = new DateTime($entered_date_ranges->max_date);
+
+			$interval = new DateInterval('P1W');
+			$daterange = new DatePeriod($start_date, $interval ,$end_date);
+
+			$date_ranges = array();
+
+			$i = 1;
+
+			foreach($daterange as $date){
+
+				$end_of_week = clone $date;
+				$end_of_week = date_modify($end_of_week, '+1 week' );
+			
+			    array_push($date_ranges, array("number" => $i, "start" => $date->format("Y-m-d"), "end" => $end_of_week->format("Y-m-d") ));
+
+			    $i++;
+			}
+
+			return $date_ranges;
+		}
+
+		return false;
+	}
+
+	function ws_ls_get_user_target_for_display($user_id)
+	{
+		global $wpdb;
+
+   		$table_name = $wpdb->prefix . WE_LS_TARGETS_TABLENAME;
+
+   		$sql = $wpdb->prepare("SELECT target_weight_weight, target_weight_stones, target_weight_pounds, target_weight_only_pounds FROM $table_name where weight_user_id = %d ", $user_id);
+
+		$row = $wpdb->get_row( $sql );
+
+		if (!is_null($row))
+		{
+			
+	    	switch (WE_LS_DATA_UNITS) {
+				case 'pounds_only':
+					$weight = $row->target_weight_only_pounds .  __("lbs", WE_LS_SLUG); 
+					break;
+				case 'kg':
+					$weight = $row->target_weight_weight .  __("Kg", WE_LS_SLUG);
+					break;
+				default:
+					$weight = $row->target_weight_stones . __("St", WE_LS_SLUG) . " " . $row->target_weight_pounds . __("lbs", WE_LS_SLUG);
+					break;
+			}
+		
+			return $weight;
+		}
+
+	
+		return false;
+
+	}
+
+	function ws_ls_get_user_target($user_id)
+	{
+		global $wpdb;
+
+   		$table_name = $wpdb->prefix . WE_LS_TARGETS_TABLENAME;
+
+   		$sql = $wpdb->prepare("SELECT target_weight_weight, target_weight_stones, target_weight_pounds, target_weight_only_pounds FROM $table_name where weight_user_id = %d ", $user_id);
+
+		$row = $wpdb->get_row( $sql );
+
+		if (!is_null($row))
+			return $row;
+		
+		return false;
+		
 	}
 
 	function ws_date_exists($user_id, $date)
@@ -407,18 +655,45 @@
 		else
 			return true;
 	}
+	function ws_target_exists($user_id)
+	{
+		global $wpdb;
+
+   		$table_name = $wpdb->prefix . WE_LS_TARGETS_TABLENAME;
+
+   		$sql =  $wpdb->prepare("SELECT count(*) as iCount FROM " . $table_name . " WHERE weight_user_id = %d", $user_id);
+
+		$rows = $wpdb->get_row($sql);
+
+		if ($rows->iCount == 0)
+			return false;
+		else
+			return true;
+	}
 
 	function ws_ls_save_data()
 	{
 
-		if ( $_POST )
-		{
+		if ( $_POST && !isset($_POST["week_filter"]))
+		{ 
 			global $wpdb;
+		
+			$save_target = false;
+			$field_prefix = "";
 
-			$table_name = $wpdb->prefix . WE_LS_TABLENAME;
-
+			if(array_key_exists ("target_button", $_POST))
+			{
+				$save_target = true;
+				$field_prefix = "target_";
+			}
+				
+			
 			$values = stripslashes_deep($_POST);
-			unset($values["submit_button"]);
+
+			if ($save_target)
+				unset($values["target_button"]);
+			else
+				unset($values["submit_button"]);
 	
 			$values["weight_user_id"] = get_current_user_id();
 
@@ -427,50 +702,72 @@
  			{
 				if (WE_LS_DATA_UNITS == "stones_pounds")
 				{
-					$values["weight_weight"] =  ws_ls_to_kg($values["weight_stones"], $values["weight_pounds"] );
-					$values["weight_only_pounds"] = ($values["weight_stones"] * 14) + $values["weight_pounds"];
+					$values[$field_prefix . "weight_weight"] =  ws_ls_to_kg($values[$field_prefix . "weight_stones"], $values[$field_prefix . "weight_pounds"] );
+					$values[$field_prefix . "weight_only_pounds"] = ($values[$field_prefix . "weight_stones"] * 14) + $values[$field_prefix . "weight_pounds"];
 				}
 				else
 				{
-					$values["weight_weight"] =  ws_ls_pounds_to_kg($values["weight_pounds"]);
-					$values["weight_only_pounds"] = $values["weight_pounds"];
+					$values[$field_prefix . "weight_weight"] =  ws_ls_pounds_to_kg($values[$field_prefix . "weight_pounds"]);
+					$values[$field_prefix . "weight_only_pounds"] = $values[$field_prefix . "weight_pounds"];
 
-					$weight_data = ws_ls_pounds_to_stone_pounds($values["weight_pounds"]);
+					$weight_data = ws_ls_pounds_to_stone_pounds($values[$field_prefix . "weight_pounds"]);
 
-					$values["weight_stones"] = $weight_data["Stones"];
-					$values["weight_pounds"] =  $weight_data["Pounds"];
+					$values[$field_prefix . "weight_stones"] = $weight_data["Stones"];
+					$values[$field_prefix . "weight_pounds"] =  $weight_data["Pounds"];
 				}
 			}
 			else // Convert Kg to Stones / Lbs
 			{
-				$weight_data = ws_ls_to_stone_pounds($values["weight_weight"]);
-				$values["weight_stones"] = $weight_data["Stones"];
-				$values["weight_pounds"] =  $weight_data["Pounds"];
-				$values["weight_only_pounds"] = ($values["weight_stones"] * 14) + $values["weight_pounds"];
+				$weight_data = ws_ls_to_stone_pounds($values[$field_prefix . "weight_weight"]);
+				$values[$field_prefix . "weight_stones"] = $weight_data["Stones"];
+				$values[$field_prefix . "weight_pounds"] =  $weight_data["Pounds"];
+				$values[$field_prefix . "weight_only_pounds"] = ($values[$field_prefix . "weight_stones"] * 14) + $values[$field_prefix . "weight_pounds"];
 			}
 
-			if (!ws_date_exists($values["weight_user_id"], $values["weight_date"]))
+			if ($save_target)
 			{
-	
-				$wpdb->insert( 
-					$table_name, 
-					$values
-				);
+				$table_name = $wpdb->prefix . WE_LS_TARGETS_TABLENAME;
 
-				return true;
+				if (!ws_target_exists($values["weight_user_id"]))
+				{  
+					$wpdb->insert( 
+						$table_name, 
+						$values
+					);
+				}
+				else
+				{
+					$sql = $wpdb->prepare("Update " . $table_name. " Set target_weight_weight = %f, target_weight_stones = %f, target_weight_pounds = %f, target_weight_only_pounds = %f where weight_user_id = %d", $values["target_weight_weight"], $values["target_weight_stones"], $values["target_weight_pounds"], $values["target_weight_only_pounds"], $values["weight_user_id"]);
+			
+					$wpdb->query($sql);
+				}	
 			}
 			else
-			{
-				if(!WE_LS_IMPERIAL_WEIGHTS)
-					$sql = $wpdb->prepare("Update " . $table_name. " Set weight_notes = %s, weight_weight = %f, weight_stones = %f, weight_pounds = %f, weight_only_pounds = %f where weight_user_id = %d and weight_date = %s", $values['weight_notes'], $values["weight_weight"], $values["weight_stones"], $values["weight_pounds"], $values["weight_only_pounds"], $values["weight_user_id"], $values["weight_date"]);
-				else
-					$sql = $wpdb->prepare("Update " . $table_name. " Set weight_notes = %s, weight_weight = %f, weight_stones = %f, weight_pounds = %f, weight_only_pounds = %f where weight_user_id = %d and weight_date = %s", $values['weight_notes'], $values["weight_weight"], $values["weight_stones"], $values["weight_pounds"], $values["weight_only_pounds"], $values["weight_user_id"], $values["weight_date"]);
+			{	
+				$table_name = $wpdb->prefix . WE_LS_TABLENAME;
+
+				if (!ws_date_exists($values["weight_user_id"], $values["weight_date"]))
+				{
 		
-				$wpdb->query($sql);
+					$wpdb->insert( 
+						$table_name, 
+						$values
+					);
+
+					return true;
+				}
+				else
+				{
+					if(!WE_LS_IMPERIAL_WEIGHTS)
+						$sql = $wpdb->prepare("Update " . $table_name. " Set weight_notes = %s, weight_weight = %f, weight_stones = %f, weight_pounds = %f, weight_only_pounds = %f where weight_user_id = %d and weight_date = %s", $values['weight_notes'], $values["weight_weight"], $values["weight_stones"], $values["weight_pounds"], $values["weight_only_pounds"], $values["weight_user_id"], $values["weight_date"]);
+					else
+						$sql = $wpdb->prepare("Update " . $table_name. " Set weight_notes = %s, weight_weight = %f, weight_stones = %f, weight_pounds = %f, weight_only_pounds = %f where weight_user_id = %d and weight_date = %s", $values['weight_notes'], $values["weight_weight"], $values["weight_stones"], $values["weight_pounds"], $values["weight_only_pounds"], $values["weight_user_id"], $values["weight_date"]);
 			
-				return true;
+					$wpdb->query($sql);
+				
+					return true;
+				}
 			}
-			
 		}
 	
 		return false;
@@ -483,12 +780,15 @@ function ws_ls_register_shortcodes()
 		[weightloss_weight_difference] - total weight lost by the logged in member
 		[weightloss_weight_start] - start weight of the logged in member
 		[weightloss_weight_most_recent] - end weight of the logged in member
+		[weightloss_weight_difference_from_target] - difference between latest and target
 	*/
 
  	add_shortcode( 'weightlosstracker', 'ws_ls_shortcode' );
  	add_shortcode( 'weightloss_weight_difference', 'ws_ls_weight_difference' );
  	add_shortcode( 'weightloss_weight_start', 'ws_ls_weight_start' );
  	add_shortcode( 'weightloss_weight_most_recent', 'ws_ls_weight_recent' );
+	add_shortcode( 'weightloss_weight_difference_from_target', 'ws_ls_weight_difference_target' );
+
 }
 
 function ws_ls_weight_start()
@@ -530,6 +830,26 @@ function ws_ls_weight_difference()
 
 	return $display_string;
 }
+function ws_ls_weight_difference_target()
+{ 
+	if (WE_LS_DATA_UNITS == "pounds_only")
+	{
+		$target_weight = ws_ls_get_target_weight_in_pounds();
+		$recent_weight = ws_ls_get_recent_weight_in_pounds();
+	}
+	else
+	{
+		$target_weight = ws_ls_get_target_weight_in_kg();
+		$recent_weight = ws_ls_get_weight_extreme(get_current_user_id(), true);
+	}
+	$difference = $recent_weight - $target_weight;
+	
+	$display_string = ($difference > 0) ? "+" : ""; 
+
+	$display_string .= we_ls_format_weight_into_correct_string_format($difference);
+
+	return $display_string;
+}
 
 function ws_ls_get_start_weight_in_kg()
 {
@@ -560,6 +880,30 @@ function ws_ls_get_weight_extreme($user_id, $recent = false, $unit = "weight_wei
 	$table_name = $wpdb->prefix . WE_LS_TABLENAME;
 
 	$sql =  $wpdb->prepare("SELECT " . $unit . " as weight_value FROM $table_name where weight_user_id = %d order by weight_date " . $direction . " limit 0, %d", $user_id, 1);
+
+	$rows = $wpdb->get_row($sql);
+
+	if (count($rows) > 0)
+		return $rows->weight_value;
+	else
+		return false;
+
+}
+function ws_ls_get_target_weight_in_kg()
+{
+	return ws_ls_get_weight_target(get_current_user_id());
+}
+function ws_ls_get_target_weight_in_pounds()
+{
+	return ws_ls_get_weight_target(get_current_user_id(), "target_weight_only_pounds");
+}
+function ws_ls_get_weight_target($user_id, $unit = "target_weight_weight")
+{
+	global $wpdb;
+
+	$table_name = $wpdb->prefix . WE_LS_TARGETS_TABLENAME;
+
+	$sql =  $wpdb->prepare("SELECT " . $unit . " as weight_value FROM $table_name where weight_user_id = %d", $user_id);
 
 	$rows = $wpdb->get_row($sql);
 
