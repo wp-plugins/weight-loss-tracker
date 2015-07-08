@@ -3,7 +3,7 @@ Contributors: aliakro
 Tags: weight, graph, track, stones, kg, table, data, plot
 Requires at least: 4.0.0
 Tested up to: 4.1
-Stable tag: 1.9
+Stable tag: 1.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: Paypal: email@YeKen.uk
@@ -15,6 +15,8 @@ A simple plugin to allow a logged in user to record their weight on given dates.
 A simple plugin to allow a logged in user to record their weight on given dates. This data is then shown in a graph (ChartNew.js) and table.
 
 Place the tag [weightlosstracker] on a given page and the user is presented with a form to enter a date, weight and notes for that entry. When the person saves their entry the data table and graph is refreshed.
+
+There are options to allow users to enter target weights, split data into tabs and support for the Avada theme.
 
 The following weight formats are supported:
 
@@ -45,9 +47,10 @@ Paypal Donate: email@YeKen.uk
 
 == Installation ==
 
-1. Upload `weight-loss-tracker` directory to the `/wp-content/plugins/` directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Open the file general/define_globals.php and make any required changes.
+1. Install "Weight Loss Tracker" via the "Plugins" page in WordPress Admin (or download zip and upload).
+2. Setup the plugin in WordPress Admin panel by goto to Settings > Weight Loss Tracker
+3. Create a page that users will visit. Within the page content add the shortcode [weightlosstracker].
+4. Voila
 
 == Frequently Asked Questions ==
 
@@ -57,18 +60,15 @@ Yes it creates two. One to store weight information per user and another to stor
 
 = Does it support the Avada theme? =
 
-Yes. In general/define_globals.php set WE_LS_SUPPORT_AVADA_THEME to "true".
+Yes. In WordPress Admin goto Settings > Weight Loss Tracker and change the setting "Enable support for Avada theme?" to Yes.
 
 = How do I switch it from Metric (Kg) to Imperial (Stones / Pounds)? =
 
-Yes. In general/define_globals.php set WE_LS_IMPERIAL_WEIGHTS to "true".
+In WordPress Admin goto Settings > Weight Loss Tracker and change the setting "Weight Units" to the desried type.
 
-= How do I switch it between Imperial Stones & Pounds to Imperial Pounds Only? =
+= How do I enable tabs? =
 
-In general/define_globals.php set WE_LS_IMPERIAL_UNITS set the value to either:
-
-- stones_pounds = Stones and Pounds (default)
-- pounds_only = Pounds only
+Yes. In WordPress Admin goto Settings > Weight Loss Tracker and change the setting "Display data in tabs?" to Yes.
 
 = Can I change measurement units while the site is live? =
 
@@ -76,13 +76,21 @@ It is only recommended if you first installed the plugin at version 1.6+ (as it 
 
 = How do I disable "Target weight" =
 
-In general/define_globals.php set WE_LS_ALLOW_TARGET_WEIGHTS set to false
+Yes. In WordPress Admin goto Settings > Weight Loss Tracker and change the setting "Allow targets?" to No.
 
 == Screenshots ==
 
 1. A basic view of the plugin displayed to the user (in Avada theme support mode)
 
 == Changelog ==
+
+= 1.11 =
+
+- Added an admin page to manage settings for plugin
+
+= 1.10 =
+
+- Weight History data presented on seperate tab
 
 = 1.9 =
 

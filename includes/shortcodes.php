@@ -3,6 +3,15 @@
 
 	function ws_ls_shortcode()
 	{
+		wp_enqueue_style('wlt-style', plugins_url( 'css/wlt-styles.css', __FILE__ ));
+		wp_enqueue_script(
+					'wlt-tabs',
+					plugins_url( 'js/wlt-tabs.js', __FILE__ )		
+				);
+		
+		if (WE_LS_USE_TABS)
+			wp_enqueue_script('jquery-ui-tabs');
+		
 		$output = "";
 
 		if (!is_user_logged_in())
@@ -36,7 +45,22 @@
 
 			$user_data = ws_ls_get_weights(get_current_user_id(), 100, $selected_week_number);
 
-					
+			if (WE_LS_USE_TABS)
+			{
+
+				$output .= "<div id=\"wlt-tabs\" class=\"ui-tabs\">
+
+					 <ul class=\"ui-tabs-nav\">
+					   <li><a href=\"#wlt-chart\">" . __("In a chart", WE_LS_SLUG) . "</a></li>
+					   <li><a href=\"#wlt-weight-history\">" . __("Weight History", WE_LS_SLUG) . "</a></li>
+					  </ul>
+
+
+
+				";
+			}
+			
+			$output .= ws_ls_start_tab("wlt-chart");
 
 			if (is_array($user_data) && count($user_data) > 1)
 			{
@@ -46,7 +70,6 @@
 
 				$output .= ws_ls_display_chart($user_data_limited);
 
-				//$output .= ws_ls_display_week_filters($week_ranges, $selected_week_number);
 			}
 			else
 			{
@@ -56,22 +79,53 @@
 							    	</p></blockquote>
 								";
 			}
-			
+
+		
 			$output .= ws_ls_display_form();
+
+			$output .= ws_ls_end_tab();
+
 
 			if (is_array($user_data) && (count($user_data) > 0 || $selected_week_number != -1))
 			{
+				if (WE_LS_USE_TABS)
+				{
+					$output .= ws_ls_start_tab("wlt-weight-history");
+					$output .= ws_ls_display_target_form();
+				}
+
 				$output .= ws_ls_title(__("Weight History", WE_LS_SLUG));
 
 				$output .= ws_ls_display_week_filters($week_ranges, $selected_week_number);
 
 				$output .= ws_ls_display_table($user_data);
+
+				$output .= ws_ls_end_tab();
+
 			}
+			
+			$output .= ws_ls_end_tab();
 		}
 		
 		return $output;
 		
 	}
+
+	function ws_ls_start_tab($tab_name)
+	{
+		if (WE_LS_USE_TABS)
+			return "<div id=\"" . $tab_name . "\" class=\"ui-tabs-panel\">";
+	
+		return "";
+	}
+	function ws_ls_end_tab()
+	{
+		if (WE_LS_USE_TABS)
+			return "</div>";
+	
+		return "";
+	}
+
 
 	function ws_ls_display_week_filters($week_ranges, $selected_week_number)
 	{
@@ -80,7 +134,7 @@
 		if ($week_ranges != false && count($week_ranges > 1))
 		{
 
-			$output .=  "<form action=\"" .  get_permalink() . "\" method=\"post\">";
+			$output .=  "<form action=\"" .  get_permalink() . "#wlt-weight-history\" method=\"post\">";
 			$output .=  "<input type=\"hidden\" value=\"true\" name=\"week_filter\">";
 			$output .=  "<div class=\"ws_ls_week_controls\">";
 
@@ -113,61 +167,67 @@
 		return $output;
 
 	}
+	function ws_ls_display_target_form()
+	{
+		wp_enqueue_script('jquery-ui-datepicker');
+		wp_enqueue_style('jquery-style', plugins_url( 'css/jquery-ui.css', __FILE__ ));
+		wp_enqueue_script('jquery-validate',plugins_url( 'js/jquery.validate.min.js', __FILE__ ));
 
+		$form_class = (WE_LS_SUPPORT_AVADA_THEME) ? "avada-contact-form" :"ws_ls_display_form";
+		
+		$output = "";
+
+		
+		$output .= ws_ls_title(__("Target Weight", WE_LS_SLUG)) ;
+
+		$output .= "<form action=\"" .  get_permalink() . "\" method=\"post\" class=\"" . $form_class .  "\" id=\"weight_form\">";
+
+		$target_weight = ws_ls_get_user_target_for_display(get_current_user_id()) ;
+
+		if ($target_weight != false)
+			$output .="<p>" . __("Your current target is", WE_LS_SLUG) . " ". $target_weight . "</p>";
+		else
+			$output .="<p>" . __("Currently, you haven't specified a target weight.", WE_LS_SLUG) . "</p>";	
+
+		$output .= "<div id=\"comment-input\">";
+		
+		if(WE_LS_IMPERIAL_WEIGHTS)
+		{
+			if (WE_LS_DATA_UNITS == "stones_pounds")
+				$output .= "<input type=\"text\" name=\"target_weight_stones\" id=\"target_weight_stones\" value=\"\" placeholder=\"" . __("Stones", WE_LS_SLUG) . "\" size=\"11\" tabindex=\"2\" >";
+
+			$output .= "<input type=\"text\" name=\"target_weight_pounds\" id=\"target_weight_pounds\" value=\"\" placeholder=\"" . __("Pounds", WE_LS_SLUG) . "\" size=\"11\" tabindex=\"3\" >";
+		}
+		else
+			$output .= "<input type=\"text\" name=\"target_weight_weight\" id=\"target_weight_weight\" value=\"\" placeholder=\"" . __("Weight", WE_LS_SLUG) . " (" . __("Kg", WE_LS_SLUG) . ")\" size=\"22\" tabindex=\"2\">";
+		
+		$output .= "
+		<div id=\"comment-submit-container\">
+			<p>
+				<div>
+					<input name=\"target_button\" type=\"submit\" id=\"target_button\" tabindex=\"5\" value=\"" . __("Update Target", WE_LS_SLUG) . "\" class=\"comment-submit btn btn-default button default small fusion-button button-small button-default button-round button-flat\">
+				</div>
+			</p>
+		</div></div>
+		</form>";
+
+		return $output;
+
+
+	}
 
 	function ws_ls_display_form()
 	{
 		wp_enqueue_script('jquery-ui-datepicker');
-		
 		wp_enqueue_style('jquery-style', plugins_url( 'css/jquery-ui.css', __FILE__ ));
-		
-		wp_enqueue_script(
-			'jquery-validate',
-			plugins_url( 'js/jquery.validate.min.js', __FILE__ )		
-		);
+		wp_enqueue_script('jquery-validate',plugins_url( 'js/jquery.validate.min.js', __FILE__ ));
 		
 		$form_class = (WE_LS_SUPPORT_AVADA_THEME) ? "avada-contact-form" :"ws_ls_display_form";
 		
 		$output = "";
 
-		if (WE_LS_ALLOW_TARGET_WEIGHTS)
-		{
-			$output .= ws_ls_title(__("Target Weight", WE_LS_SLUG)) ;
-
-			$output .= "<form action=\"" .  get_permalink() . "\" method=\"post\" class=\"" . $form_class .  "\" id=\"weight_form\">";
-
-			$target_weight = ws_ls_get_user_target_for_display(get_current_user_id()) ;
-
-			if ($target_weight != false)
-				$output .="<p>" . __("Your current target is", WE_LS_SLUG) . " ". $target_weight . "</p>";
-			else
-				$output .="<p>" . __("Currently, you haven't specified a target weight.", WE_LS_SLUG) . "</p>";	
-
-			$output .= "<div id=\"comment-input\">";
-			
-			if(WE_LS_IMPERIAL_WEIGHTS)
-			{
-				if (WE_LS_DATA_UNITS == "stones_pounds")
-					$output .= "<input type=\"text\" name=\"target_weight_stones\" id=\"target_weight_stones\" value=\"\" placeholder=\"" . __("Stones", WE_LS_SLUG) . "\" size=\"11\" tabindex=\"2\" >";
-
-				$output .= "<input type=\"text\" name=\"target_weight_pounds\" id=\"target_weight_pounds\" value=\"\" placeholder=\"" . __("Pounds", WE_LS_SLUG) . "\" size=\"11\" tabindex=\"3\" >";
-			}
-			else
-				$output .= "<input type=\"text\" name=\"target_weight_weight\" id=\"target_weight_weight\" value=\"\" placeholder=\"" . __("Weight", WE_LS_SLUG) . " (" . __("Kg", WE_LS_SLUG) . ")\" size=\"22\" tabindex=\"2\">";
-			
-			$output .= "
-			<div id=\"comment-submit-container\">
-				<p>
-					<div>
-						<input name=\"target_button\" type=\"submit\" id=\"target_button\" tabindex=\"5\" value=\"" . __("Update Target", WE_LS_SLUG) . "\" class=\"comment-submit btn btn-default button default small fusion-button button-small button-default button-round button-flat\">
-					</div>
-				</p>
-			</div></div>
-			</form>";
-
-		}
-
-		
+		if (WE_LS_ALLOW_TARGET_WEIGHTS && !WE_LS_USE_TABS)
+			$output .= ws_ls_display_target_form();
 
 		$output .= ws_ls_title(__("Add a new weight", WE_LS_SLUG)) . "
 
@@ -497,7 +557,7 @@
 
 
  		var width = jQuery('#myChart').parent().width();
-		jQuery('#myChart').attr(\"width\",width);
+		jQuery('#myChart').attr(\"width\",width-50);
 		new Chart(ctx).Line(data,options);
 		window.onresize = function(event){
 		    var width = jQuery('#myChart').parent().width();

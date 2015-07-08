@@ -1,0 +1,28 @@
+#wlt-tabs
+{
+	
+}
+
+#wlt-weight-history
+{
+	
+}
+
+#wlt-chart
+{
+
+}
+
+ .ui-tabs { padding: .2em; zoom: 1; }
+ .ui-tabs .ui-tabs-nav { list-style: none; position: relative;  padding: .2em .2em 0; border-bottom:1px solid #cccccc;height:auto;}
+ .ui-tabs .ui-tabs-nav li { position: relative; float: left; background-color: #ffffff; border-bottom-width: 0 !important; margin: 0 .2em -1px 0; padding: 0; }
+ .ui-tabs .ui-tabs-nav li a { float: left; text-decoration: none; padding: .5em 1em; }
+ .ui-tabs .ui-tabs-nav li.ui-tabs-selected { padding-bottom: 1px; border-bottom-width: 0; }
+ .ui-tabs .ui-tabs-nav li.ui-tabs-selected a, .ui-tabs .ui-tabs-nav li.ui-state-disabled a, .ui-tabs .ui-tabs-nav li.ui-state-processing a { cursor: text; }
+ .ui-tabs .ui-tabs-nav li a, .ui-tabs.ui-tabs-collapsible .ui-tabs-nav li.ui-tabs-selected a {  cursor: pointer; } 
+.ui-tabs .ui-tabs-panel { padding: 1em 1.4em; display: block;  background: none; border: 0px; width:100%;}
+ .ui-tabs .ui-tabs-hide { display: none !important; }
+ .wlt-clear-fix
+ {
+
+ }
