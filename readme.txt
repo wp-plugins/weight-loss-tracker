@@ -3,7 +3,7 @@ Contributors: aliakro
 Tags: weight, graph, track, stones, kg, table, data, plot
 Requires at least: 4.0.0
 Tested up to: 4.1
-Stable tag: 1.11
+Stable tag: 1.12
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: Paypal: email@YeKen.uk
@@ -56,7 +56,10 @@ Paypal Donate: email@YeKen.uk
 
 = Does it create any custom mySQL tables =
 
-Yes it creates two. One to store weight information per user and another to store target weights.
+Yes it creates two. One to store weight information per user and another to store target weights:
+
+- WP_WS_LS_DATA_TARGETS - Stores user target data
+- WP_WS_LS_DATA - Stores weight history
 
 = Does it support the Avada theme? =
 
@@ -83,6 +86,10 @@ Yes. In WordPress Admin goto Settings > Weight Loss Tracker and change the setti
 1. A basic view of the plugin displayed to the user (in Avada theme support mode)
 
 == Changelog ==
+
+= 1.12 =
+
+- Added a button on admin page to delete all existing user data.
 
 = 1.11 =
 

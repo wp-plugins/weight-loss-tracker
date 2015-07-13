@@ -11,6 +11,10 @@ function ws_ls_admin_page() {
 		wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 	}
 
+	// If remove existing data
+	if (is_admin() && isset($_GET['removedata']) && 'y' == $_GET['removedata'])
+		ws_ls_delete_existing_data();
+
 		?>
 		<div class="wrap">
 
@@ -103,6 +107,14 @@ function ws_ls_admin_page() {
 					</div>
 					<!-- .postbox -->
 
+					<div class="postbox">
+						<h3 class="hndle"><span><?php _e( 'Delete existing data'); ?> </span></h3>
+						<div style="padding: 15px 15px 0px 15px">
+							<a class="button-secondary delete-confirm" href="<?php echo get_permalink() . '?page=ws-ls-admin-page';  ?>&amp;removedata=y"><?php _e( 'Remove ALL user data'); ?></a>
+							<p><?php _e( 'You can use the following button to remove all user data currently stored by the plugin. <strong>All weight entries for every user will be lost!</strong>' ); ?></p>
+						</div>
+					</div>
+					
 				</div>
 				<!-- .meta-box-sortables .ui-sortable -->
 
@@ -118,11 +130,13 @@ function ws_ls_admin_page() {
 
 </div> <!-- .wrap -->		
 
-	
-
-
-
 	<?php
+
+	echo ws_ls_create_dialog_jquery_code('Are you sure you?', 
+		'Are you sure you wish to remove all user data?<br /><br />', 
+			'delete-confirm');
+
+
 }
 
 function ws_ls_register_settings()
@@ -138,3 +152,5 @@ if ( is_admin() )
 	add_action( 'admin_menu', 'ws_ls_admin_menu' );
 	add_action( 'admin_init', 'ws_ls_register_settings' );
 }
+
+
