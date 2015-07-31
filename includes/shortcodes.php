@@ -226,7 +226,7 @@
 		
 		$output = "";
 
-		if (WE_LS_ALLOW_TARGET_WEIGHTS && !WE_LS_USE_TABS)
+		if (WE_LS_ALLOW_TARGET_WEIGHTS) // && !WE_LS_USE_TABS)
 			$output .= ws_ls_display_target_form();
 
 		$output .= ws_ls_title(__("Add a new weight", WE_LS_SLUG)) . "
@@ -790,6 +790,14 @@
 
 				if (!ws_target_exists($values["weight_user_id"]))
 				{  
+					$allowed_keys = array('target_weight_weight', 'target_weight_stones', 'target_weight_pounds', 'target_weight_only_pounds', 'weight_user_id');
+
+					foreach ($values as $key => $value) {
+						if(!in_array($key, $allowed_keys)) {
+							unset($values[$key]);
+						}
+					}
+
 					$wpdb->insert( 
 						$table_name, 
 						$values
@@ -808,7 +816,15 @@
 
 				if (!ws_date_exists($values["weight_user_id"], $values["weight_date"]))
 				{
-		
+
+					$allowed_keys = array('weight_user_id', 'weight_date', 'weight_stones', 'weight_pounds', 'weight_weight', 'weight_notes');
+
+					foreach ($values as $key => $value) {
+						if(!in_array($key, $allowed_keys)) {
+							unset($values[$key]);
+						}
+					}
+
 					$wpdb->insert( 
 						$table_name, 
 						$values

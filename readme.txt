@@ -3,7 +3,7 @@ Contributors: aliakro
 Tags: weight, graph, track, stones, kg, table, data, plot
 Requires at least: 4.0.0
 Tested up to: 4.1
-Stable tag: 1.12
+Stable tag: 1.13
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: Paypal: email@YeKen.uk
@@ -86,6 +86,11 @@ Yes. In WordPress Admin goto Settings > Weight Loss Tracker and change the setti
 1. A basic view of the plugin displayed to the user (in Avada theme support mode)
 
 == Changelog ==
+
+= 1.13 =
+
+- BUG FIX: Some third party plugins / installs insert additional input fields within <form>. Added additional code to remove any non expected ones.
+- BUG FIX: Target form appears when tabs enbaled - regardless of whether or not Targets are enabled.
 
 = 1.12 =
 
