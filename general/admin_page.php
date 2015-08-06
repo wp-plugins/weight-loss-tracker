@@ -74,6 +74,17 @@ function ws_ls_admin_page() {
 											</td>
 										</tr>
 										<tr>
+											<th scope="row"><?php _e( 'Display points on graph?' ); ?></th>
+											<td>
+												<select id="ws-ls-allow-points" name="ws-ls-allow-points">
+													<option value="yes" <?php selected( get_option('ws-ls-allow-points'), 'yes' ); ?>><?php _e('Yes')?></option>
+													<option value="no" <?php selected( get_option('ws-ls-allow-points'), 'no' ); ?>><?php _e('No')?></option>
+													
+												</select>
+												<p><?php _e('If enabled, "Allows points and labels to be displayed on graph.')?></p>
+											</td>
+										</tr>
+										<tr>
 											<th scope="row"><?php _e( 'Display data in tabs?' ); ?></th>
 											<td>
 												<select id="ws-ls-use-tabs" name="ws-ls-use-tabs">
@@ -143,6 +154,7 @@ function ws_ls_register_settings()
 {
 	register_setting( 'we-ls-options-group', 'ws-ls-units' );
   	register_setting( 'we-ls-options-group', 'ws-ls-allow-targets' );
+  	register_setting( 'we-ls-options-group', 'ws-ls-allow-points' );
   	register_setting( 'we-ls-options-group', 'ws-ls-use-tabs' );
   	register_setting( 'we-ls-options-group', 'ws-ls-support-avada' );
 }

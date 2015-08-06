@@ -4,14 +4,15 @@
 	function ws_ls_shortcode()
 	{
 		wp_enqueue_style('wlt-style', plugins_url( 'css/wlt-styles.css', __FILE__ ));
-		wp_enqueue_script(
-					'wlt-tabs',
-					plugins_url( 'js/wlt-tabs.js', __FILE__ )		
-				);
-		
 		if (WE_LS_USE_TABS)
-			wp_enqueue_script('jquery-ui-tabs');
+		{
+			wp_enqueue_script(
+						'wlt-tabs',
+						plugins_url( 'js/wlt-tabs.js', __FILE__ )		
+					);
 		
+				wp_enqueue_script('jquery-ui-tabs');
+		}
 		$output = "";
 
 		if (!is_user_logged_in())
@@ -386,12 +387,11 @@
 	
 	function ws_ls_display_chart($data)
 	{
-		$y_axis_unit = (WE_LS_IMPERIAL_WEIGHTS) ? "(" . __("lbs", WE_LS_SLUG) . ")" : "(" . __("Kg", WE_LS_SLUG) . ")";
+		$y_axis_unit = (WE_LS_IMPERIAL_WEIGHTS) ? __("lbs", WE_LS_SLUG) : __("Kg", WE_LS_SLUG) ;
 
-
- 		$output = "<script src=\"". plugins_url( 'js/Chart.min.js', __FILE__ ) . "\" type=\"text/javascript\"></script>";
-
- 		$output .= "<canvas id=\"myChart\" ></canvas>
+		wp_enqueue_script('jquery-chart-ws-ls', plugins_url( 'js/chart-js-1.0.2/Chart.min.js', __FILE__ ), array( 'jquery' ));
+		
+ 		$output = "<canvas id=\"myChart\" ></canvas>
 
  		<script>
 		var ctx = document.getElementById('myChart').getContext('2d');
@@ -460,8 +460,6 @@
 		            data: [";
    			
    			
-
-
 			    for($i=0; $i<count($data); $i++)
 			    {
 			    	if(WE_LS_IMPERIAL_WEIGHTS)
@@ -488,77 +486,36 @@
 
 		var options = 
 		{
-
-		    ///Boolean - Whether grid lines are shown across the chart
 		    scaleShowGridLines : true,
-
-		    //String - Colour of the grid lines
-		    scaleGridLineColor : 'rgba(0,0,0,.05)',
-
-		    //Number - Width of the grid lines
-		    scaleGridLineWidth : 1,
-			 scaleOverride: false,
-
-			    // ** Required if scaleOverride is true **
-			    // Number - The number of steps in a hard coded scale
-			    scaleSteps: 14,
-			    // Number - The value jump in the hard coded scale
-			    scaleStepWidth: 10,
-			    // Number - The scale starting value
-			    scaleStartValue: 20,
-		    //Boolean - Whether the line is curved between points
+			scaleGridLineColor : 'rgba(0,0,0,.05)',
+			scaleGridLineWidth : 1,
+			scaleOverride: false,
+			scaleSteps: 14,
+			scaleStepWidth: 10,
+			scaleStartValue: 20,
 		    bezierCurve : true,
-
-		    //Number - Tension of the bezier curve between points
-		    bezierCurveTension : 0.4,
-
-		    //Boolean - Whether to show a dot for each point
-		    pointDot : false,
-
-		    //Number - Radius of each point dot in pixels
+			bezierCurveTension : 0.4,
+			pointDot : " . ((WE_LS_ALLOW_POINTS) ? 'true' : 'false') . ",
 		    pointDotRadius : 4,
-
-		    //Number - Pixel width of point dot stroke
-		    pointDotStrokeWidth : 1,
-
-		    //Number - amount extra to add to the radius to cater for hit detection outside the drawn point
-		    pointHitDetectionRadius : 20,
-
-		    //Boolean - Whether to show a stroke for datasets
-		    datasetStroke : true,
-
-		    //Number - Pixel width of dataset stroke
-		    datasetStrokeWidth : 2,
-
-		    //Boolean - Whether to fill the dataset with a colour
-		    datasetFill : true,
-
-		    //String - A legend template
-		    legendTemplate : '<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].lineColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>'
-
-
-			,graphTitle : '',
+			pointDotStrokeWidth : 1,
+			pointHitDetectionRadius : 20,
+			datasetStroke : true,
+			datasetStrokeWidth : 2,
+			datasetFill : true,
+			multiTooltipTemplate: '<%= datasetLabel %> - <%= value %> " . $y_axis_unit . "',
+			graphTitle : '',
 			graphTitleFontFamily : 'Arial',
 			graphTitleFontSize : 24,
 			graphTitleFontStyle : 'bold',
-			graphTitleFontColor : '#666',
-
-			yAxisLabel : '" . __("Weight", WE_LS_SLUG) . " " . $y_axis_unit . "',
-			yAxisFontFamily : 'Arial',
-			yAxisFontSize : 16,
-			yAxisFontStyle : 'normal',
-			yAxisFontColor : '#666',
-     		xAxisLabel : '". __("Date", WE_LS_SLUG) ."',
-	 	  	xAxisFontFamily : 'Arial',
-			xAxisFontSize : 13,
-			xAxisFontStyle : 'normal',
-			xAxisFontColor : '#666'
+			graphTitleFontColor : '#666',			
 		};
+		jQuery( document ).ready(function( $ ) {
+		
+			var width = $('#myChart').parent().width();
+			$('#myChart').attr(\"width\",width-50);
+			new Chart(ctx).Line(data,options);
 
-
- 		var width = jQuery('#myChart').parent().width();
-		jQuery('#myChart').attr(\"width\",width-50);
-		new Chart(ctx).Line(data,options);
+		});
 		window.onresize = function(event){
 		    var width = jQuery('#myChart').parent().width();
 		    jQuery('#myChart').attr(\"width\",width);

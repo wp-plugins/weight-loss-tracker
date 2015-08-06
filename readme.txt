@@ -3,16 +3,16 @@ Contributors: aliakro
 Tags: weight, graph, track, stones, kg, table, data, plot
 Requires at least: 4.0.0
 Tested up to: 4.1
-Stable tag: 1.13
+Stable tag: 1.14
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: Paypal: email@YeKen.uk
 
-A simple plugin to allow a logged in user to record their weight on given dates. This data is then shown in a graph (ChartNew.js) and table.
+A simple plugin to allow a logged in user to record their weight on given dates. This data is then shown in a graph (Chart.js) and table.
 
 == Description ==
 
-A simple plugin to allow a logged in user to record their weight on given dates. This data is then shown in a graph (ChartNew.js) and table.
+A simple plugin to allow a logged in user to record their weight on given dates. This data is then shown in a graph (Chart.js) and table.
 
 Place the tag [weightlosstracker] on a given page and the user is presented with a form to enter a date, weight and notes for that entry. When the person saves their entry the data table and graph is refreshed.
 
@@ -86,6 +86,13 @@ Yes. In WordPress Admin goto Settings > Weight Loss Tracker and change the setti
 1. A basic view of the plugin displayed to the user (in Avada theme support mode)
 
 == Changelog ==
+
+= 1.14 =
+
+- Chart.new.js (library used for charts) has been reverted back to Chart.js. Unfortunately this means labels are lost on graphs. However, Chart.js is still maintained by the developers.
+- New option to display plot points on graph. If enabled, target and recorded weight will be displayed on hover.
+- Chart JavaScript tidied up.
+- BUG FIX: Removed references to jQuery Tabs when Tabs disabled.
 
 = 1.13 =
 
