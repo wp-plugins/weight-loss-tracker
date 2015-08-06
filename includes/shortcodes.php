@@ -3,16 +3,13 @@
 
 	function ws_ls_shortcode()
 	{
-		wp_enqueue_style('wlt-style', plugins_url( 'css/wlt-styles.css', __FILE__ ));
+		wp_enqueue_style('wlt-style', plugins_url( 'css/wlt-styles.css', __FILE__ ), array(), WE_LS_CURRENT_VERSION);
 		if (WE_LS_USE_TABS)
 		{
-			wp_enqueue_script(
-						'wlt-tabs',
-						plugins_url( 'js/wlt-tabs.js', __FILE__ )		
-					);
-		
-				wp_enqueue_script('jquery-ui-tabs');
+			wp_enqueue_script('wlt-tabs', plugins_url( 'js/wlt-tabs.js', __FILE__ ), array(), WE_LS_CURRENT_VERSION);
+			wp_enqueue_script('jquery-ui-tabs');
 		}
+
 		$output = "";
 
 		if (!is_user_logged_in())
@@ -171,8 +168,8 @@
 	function ws_ls_display_target_form()
 	{
 		wp_enqueue_script('jquery-ui-datepicker');
-		wp_enqueue_style('jquery-style', plugins_url( 'css/jquery-ui.css', __FILE__ ));
-		wp_enqueue_script('jquery-validate',plugins_url( 'js/jquery.validate.min.js', __FILE__ ));
+		wp_enqueue_style('jquery-style', plugins_url( 'css/jquery-ui.css', __FILE__ ), array(), WE_LS_CURRENT_VERSION);
+		wp_enqueue_script('jquery-validate',plugins_url( 'js/jquery.validate.min.js', __FILE__ ), array(), WE_LS_CURRENT_VERSION);
 
 		$form_class = (WE_LS_SUPPORT_AVADA_THEME) ? "avada-contact-form" :"ws_ls_display_form";
 		
@@ -220,8 +217,8 @@
 	function ws_ls_display_form()
 	{
 		wp_enqueue_script('jquery-ui-datepicker');
-		wp_enqueue_style('jquery-style', plugins_url( 'css/jquery-ui.css', __FILE__ ));
-		wp_enqueue_script('jquery-validate',plugins_url( 'js/jquery.validate.min.js', __FILE__ ));
+		wp_enqueue_style('jquery-style', plugins_url( 'css/jquery-ui.css', __FILE__ ), array(), WE_LS_CURRENT_VERSION);
+		wp_enqueue_script('jquery-validate',plugins_url( 'js/jquery.validate.min.js', __FILE__ ), array(), WE_LS_CURRENT_VERSION);
 		
 		$form_class = (WE_LS_SUPPORT_AVADA_THEME) ? "avada-contact-form" :"ws_ls_display_form";
 		
@@ -389,7 +386,7 @@
 	{
 		$y_axis_unit = (WE_LS_IMPERIAL_WEIGHTS) ? __("lbs", WE_LS_SLUG) : __("Kg", WE_LS_SLUG) ;
 
-		wp_enqueue_script('jquery-chart-ws-ls', plugins_url( 'js/chart-js-1.0.2/Chart.min.js', __FILE__ ), array( 'jquery' ));
+		wp_enqueue_script('jquery-chart-ws-ls', plugins_url( 'js/chart-js-1.0.2/Chart.min.js', __FILE__ ), array( 'jquery' ), WE_LS_CURRENT_VERSION);
 		
  		$output = "<canvas id=\"myChart\" ></canvas>
 

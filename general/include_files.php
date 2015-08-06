@@ -8,7 +8,6 @@
 	
 	include WS_LS_ABSPATH . "general/functions.php";
 	include WS_LS_ABSPATH . "general/functions.pages.php";
-	include WS_LS_ABSPATH . "general/upgrade_check.php";
 	include WS_LS_ABSPATH . "general/admin_page.php";
 
 	// -----------------------------------------------------------------------------------------

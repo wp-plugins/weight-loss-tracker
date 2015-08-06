@@ -59,7 +59,6 @@
 	// AC: Other defined fields that can't be changed in settings page.
 	// -----------------------------------------------------------------------------------------
 	
-	define('WE_LS_CURRENT_VERSION', "1.11");
 	define('WE_LS_TITLE', "Weight Loss Tracker");
 	define('WE_LS_SLUG', "weight-loss-tracker");
 	define('WE_LS_TABLENAME', "WS_LS_DATA"); 
