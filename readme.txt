@@ -6,7 +6,6 @@ Tested up to: 4.1
 Stable tag: 1.15
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Donate link: Paypal: email@YeKen.uk
 
 A simple plugin to allow a logged in user to record their weight on given dates. This data is then shown in a graph (Chart.js) and table.
 
@@ -86,6 +85,12 @@ Yes. In WordPress Admin goto Settings > Weight Loss Tracker and change the setti
 1. A basic view of the plugin displayed to the user (in Avada theme support mode)
 
 == Changelog ==
+
+= 1.15 =
+
+- Removed upgrade check. This was trying to recreate the MySQL table for target data and throwing errors on some installs.
+- Added versions numbers when enqueuing Js and CSS scripts.
+- Tidied up includes statements.
 
 = 1.14 =
 
